@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="CHANGEME">
+		<jta-data-source>java:/abdcp_ds</jta-data-source>
+	   
+	    <class>pe.gtdo.entity.Departamento</class>
+		<class>pe.gtdo.entity.EstadoNumeracion</class>
+		<class>pe.gtdo.entity.EstadoProceso</class>
+		<class>pe.gtdo.entity.GeneradorCodigo</class>
+		<class>pe.gtdo.entity.MensageAbdcp</class>
+		<class>pe.gtdo.entity.Modalidad</class>
+		<class>pe.gtdo.entity.MotivoRetorno</class>
+		<class>pe.gtdo.entity.Participante</class>
+		<class>pe.gtdo.entity.TipoCliente</class>
+		<class>pe.gtdo.entity.TipoDocumentoIdentidad</class>
+		<class>pe.gtdo.entity.TipoMensaje</class>
+		<class>pe.gtdo.entity.TipoMoneda</class>
+		<class>pe.gtdo.entity.TipoProceso</class>
+		<class>pe.gtdo.entity.TipoServicio</class>
+
+		<properties>
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.type" value="debug" />
+		</properties>
+	</persistence-unit>
+</persistence>
