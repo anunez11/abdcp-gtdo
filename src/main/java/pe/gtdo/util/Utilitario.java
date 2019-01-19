@@ -3,6 +3,7 @@ package pe.gtdo.util;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -20,6 +21,9 @@ import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -29,7 +33,7 @@ import org.json.JSONObject;
 
 
 import org.xml.sax.SAXException;
-
+import org.w3c.dom.Document;
 
 
 @ApplicationScoped
@@ -39,20 +43,31 @@ public class Utilitario {
 	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\ABDCP\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
 	
 	
+	public  Document stringToXml(String xmlString) throws ParserConfigurationException, SAXException, IOException{
+	
+		
+	     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+	     InputStream inputStream = new    ByteArrayInputStream(xmlString.getBytes());	     
+	     return docBuilder.parse(inputStream);
+	}
+	
+	 
+	
 	
 	
 	public Boolean validarMsg(String xmslMsg){
 		 System.out.println("mensaje: "+xmslMsg);
 	     try {
 	    	 
-	    	 System.out.println("NO paso nada ");
+	    	
 	            SchemaFactory factory = 
 	                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	            Schema schema = factory.newSchema(new File(XSD_FILE));
 	            Validator validator = schema.newValidator();
 	            validator.validate(new StreamSource(new ByteArrayInputStream(xmslMsg.getBytes()) ));
 	        } catch (IOException | SAXException e) {
-
+                e.printStackTrace();
 	        	
 	            return false;
 	        }

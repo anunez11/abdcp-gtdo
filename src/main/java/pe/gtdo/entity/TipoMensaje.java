@@ -21,6 +21,8 @@ public class TipoMensaje implements Serializable {
 	private String codigo;
 
 	private String descripcion;
+	
+	private String actor;
 
 	@Column(name="es_activo")
 	private Boolean esActivo;
@@ -59,5 +61,15 @@ public class TipoMensaje implements Serializable {
 	public void setEsActivo(Boolean esActivo) {
 		this.esActivo = esActivo;
 	}
+
+	public String getActor() {
+		return actor;
+	}
+
+	public void setActor(String actor) {
+		this.actor = actor;
+	}
+	
+	
 
 }

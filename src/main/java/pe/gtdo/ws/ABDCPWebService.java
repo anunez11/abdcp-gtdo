@@ -1,15 +1,18 @@
 package pe.gtdo.ws;
 
+import java.io.IOException;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.HandlerChain;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.soap.SOAPBinding;
 
-
+import org.xml.sax.SAXException;
 
 import pe.gtdo.controller.ABDCPController;
 
@@ -40,7 +43,9 @@ public class ABDCPWebService implements  ABDCPWebServicePortType{
 		
 		// TODO Auto-generated method stub		
 		// aca vien la capa de negocio ....
-		return adbcp.getResultado(userID, password, xmlMsg, attachedDoc);
+		
+			return adbcp.getResultado(userID, password, xmlMsg, attachedDoc);
+		
 		
 		
 	}

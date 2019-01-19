@@ -8,9 +8,9 @@
 	<xsd:element name="MensajeABDCP">
 		<xsd:complexType>
 			<xsd:sequence>
-				<xsd:element name="CabeceraMensaje" type="TipoCabeceraMensaje" maxOccurs="1"/>
-				<xsd:element name="CuerpoMensaje" type="TipoCuerpoMensaje" maxOccurs="1"/>
-			</xsd:sequence>
+				<xsd:element name="CabeceraMensaje" type="TipoCabeceraMensaje" maxOccurs="1"/>
+                <xsd:element name="CuerpoMensaje" type="TipoCuerpoMensaje" maxOccurs="1" />
+            </xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
 	<!-- >>>>>>>>>>>>>>>>>>>>>> TIPOS SIMPLES <<<<<<<<<<<<<<<<<<<<<<< -->
@@ -467,9 +467,9 @@
 		<!-- SP/CP DepartamentoSolicitud is not used by CP-->
 	</xsd:complexType>
 	<xsd:complexType name="TipoNoIntegridad">
-		<xsd:sequence>
-			<xsd:element name="NumeroSecuencialSolicitud" type="TipoIdentificadorProceso"/>
-			<xsd:element name="IdentificadorMensajeErroneo" type="TipoIdentificadorMensaje"/>
+		<xsd:sequence>
+            <xsd:element name="NumeroSecuencialSolicitud" type="TipoIdentificadorProceso" />
+            <xsd:element name="IdentificadorMensajeErroneo" type="TipoIdentificadorMensaje"/>
 			<xsd:element name="CausaNoIntegridad" type="TipoCausaNoIntegridad"/>
 			<xsd:element name="FechaRecepcionMensajeAnterior" type="TipoFechaHora"/>
 		</xsd:sequence>

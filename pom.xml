@@ -134,56 +134,39 @@
 
 
 	<dependencies>
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>7.0</version>
-			<scope>provided</scope>
-	</dependency>
-     <dependency>
-          <groupId>pe.gtdo</groupId>
-    <artifactId>abdcp-entitymanager</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-       
-     </dependency>
-     
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>7.0</version>
+				<scope>provided</scope>
+			</dependency>
+   		    <dependency>
+         		<groupId>pe.gtdo</groupId>
+		    	<artifactId>abdcp-entitymanager</artifactId>
+		    	<version>0.0.1-SNAPSHOT</version>       
+    	   </dependency>   
 
-<!--      <dependency> -->
-<!-- 			<groupId>pe.gob.mpfn</groupId> -->
-<!-- 			<artifactId>mpfn-core</artifactId> -->
-<!-- 			<version>0.0.1-SNAPSHOT</version> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>pe.gob.mpfn</groupId> -->
-<!-- 			<artifactId>mpfn-entitymanager</artifactId> -->
-<!-- 			<version>0.0.1-SNAPSHOT</version> -->
-<!-- 		</dependency> -->
-<!-- 	<dependency> -->
-
-<!-- 			<groupId>pe.gob.mpfn</groupId> -->
-<!-- 			<artifactId>cfeException</artifactId> -->
-<!-- 			<version>0.0.1-SNAPSHOT</version> -->
-<!-- 		</dependency> -->
           <dependency>
 		        <groupId>pe.gtdo</groupId>
 		    <artifactId>abdcp-exception</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>
        
-     </dependency>
+    	 </dependency>
           
           <dependency>
 		     <groupId>pe.gtdo</groupId>
 		    <artifactId>abdcp-configuration</artifactId>
 		    <version>0.0.1-SNAPSHOT</version>		       
-     </dependency>
+    	 </dependency>
+
+          <dependency>
+		     <groupId>pe.gtdo</groupId>
+		    <artifactId>abdcp-cliente-soap</artifactId>
+		    <version>0.0.1-SNAPSHOT</version>		       
+    	 </dependency>
+
      
-<!--      <dependency> -->
-<!-- 			<groupId>pe.gob.mpfn</groupId> -->
-<!-- 			<artifactId>mpfn-configuration</artifactId> -->
-<!-- 			<version>0.0.1-SNAPSHOT</version> -->
-<!-- 		</dependency> -->
-     
-<dependency>
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20170516</version>
