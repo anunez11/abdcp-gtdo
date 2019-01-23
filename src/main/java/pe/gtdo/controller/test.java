@@ -1,6 +1,8 @@
 package pe.gtdo.controller;
 
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -8,11 +10,14 @@ import javax.xml.bind.Marshaller;
 
 import pe.gtdo.cliente.ClienteSoap;
 import pe.gtdo.exception.AbdcpException;
-import pe.gtdo.msg.MensajeABDCP;
-import pe.gtdo.msg.TipoCabeceraMensaje;
-import pe.gtdo.msg.TipoCuerpoMensaje;
-import pe.gtdo.msg.TipoSolicitudPortabilidad;
+import pe.gtdo.msg.Builder;
 import pe.gtdo.soap.ReceiveMessageResponse;
+import pe.gtdo.tipo.MensajeABDCP;
+import pe.gtdo.tipo.TipoCabeceraMensaje;
+import pe.gtdo.tipo.TipoCuerpoMensaje;
+import pe.gtdo.tipo.TipoListaRangosNumeracion;
+import pe.gtdo.tipo.TipoRangoNumeracion;
+import pe.gtdo.tipo.TipoSolicitudPortabilidad;
 
 public class test {
 
@@ -25,7 +30,7 @@ public class test {
 		ClienteSoap soap= new ClienteSoap();
 		
 		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
-		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "", "", getXmlString( genenerarMensage()));
+		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "", "", getXmlString( ));
 		
 		System.out.println("========================================================>");
 		System.out.println(respuesta.getResponse());
@@ -52,11 +57,23 @@ public class test {
 		
 		TipoSolicitudPortabilidad consultaPrevia=new TipoSolicitudPortabilidad();
 		
+		List<TipoRangoNumeracion> numeracionSolicitada=new ArrayList<TipoRangoNumeracion>();
+		TipoRangoNumeracion rango=new TipoRangoNumeracion();
+		rango.setInicioRango("954180317");
+		rango.setTipoPortabilidadCedente("01");
+		
+		numeracionSolicitada.add(rango);
+		numeracionSolicitada.add(rango);
+		
+		
+		TipoListaRangosNumeracion lista= new TipoListaRangosNumeracion();
+		lista.setRangoNumeracion(numeracionSolicitada);
+		
 		consultaPrevia.setCantidadNumeraciones("1");
 		consultaPrevia.setCliente("1");
 		consultaPrevia.setCodigoCedente("35");
 		consultaPrevia.setCodigoReceptor("46");
-		consultaPrevia.setDepartamentoSolicitud("");
+		consultaPrevia.setDepartamentoSolicitud("05");
 		consultaPrevia.setEmailContacto("angel@gmail.com");
 		consultaPrevia.setFaxContacto("abv123456789");
 		consultaPrevia.setNombreContacto("Angel NUñez Berrospi");
@@ -66,20 +83,65 @@ public class test {
 		consultaPrevia.setTelefonoContacto("954180317");
 		consultaPrevia.setTipoDocumentoIdentidad("01");
 		consultaPrevia.setTipoServicio("1");
-		
-		cuerpo.setIdMensaje("46201901190000001");
-		cuerpo.setConsultaPrevia(consultaPrevia);
-		
-		mensajeABDCP.setCuerpoMensaje(cuerpo);
-		
+		consultaPrevia.setNumeracionSolicitada(lista);
+		cuerpo.setIdMensaje("CP");
+		cuerpo.setConsultaPrevia(consultaPrevia);		
+		mensajeABDCP.setCuerpoMensaje(cuerpo);		
 		return mensajeABDCP;
+		
+		
 	}
-	
+	public static String getXmlString() throws JAXBException{
+		
+		
+         TipoSolicitudPortabilidad consultaPrevia=new TipoSolicitudPortabilidad();
+		
+		List<TipoRangoNumeracion> numeracionSolicitada=new ArrayList<TipoRangoNumeracion>();
+		TipoRangoNumeracion rango=new TipoRangoNumeracion();
+		rango.setInicioRango("954180317");
+		rango.setTipoPortabilidadCedente("01");
+		
+		numeracionSolicitada.add(rango);
+		numeracionSolicitada.add(rango);
+		
+		
+		TipoListaRangosNumeracion lista= new TipoListaRangosNumeracion();
+		lista.setRangoNumeracion(numeracionSolicitada);
+		
+		consultaPrevia.setCantidadNumeraciones("1");
+		consultaPrevia.setCliente("1");
+		consultaPrevia.setCodigoCedente("35");
+		consultaPrevia.setCodigoReceptor("46");
+		consultaPrevia.setDepartamentoSolicitud("05");
+		consultaPrevia.setEmailContacto("angel@gmail.com");
+		consultaPrevia.setFaxContacto("abv123456789");
+		consultaPrevia.setNombreContacto("Angel NUñez Berrospi");
+		consultaPrevia.setNumeroConsultaPrevia("46201901190000001");
+		consultaPrevia.setNumeroDocumentoIdentidad("42371327");
+		consultaPrevia.setObservaciones("");
+		consultaPrevia.setTelefonoContacto("954180317");
+		consultaPrevia.setTipoDocumentoIdentidad("01");
+		consultaPrevia.setTipoServicio("1");
+		consultaPrevia.setNumeracionSolicitada(lista);
+		
+		
+		Builder builder= new Builder();
+		builder.setCodigoMsg("CP");
+		builder.setCabeceraDestinatario("00");
+		builder.setCabeceraFechaCreacionMensaje("20190119172045");
+		builder.setCabeceraIdentificadorMensaje("46201901190000001");
+		builder.setCabeceraIdentificadorProceso("46190119050000008");
+		builder.setCabeceraRemitente("46");
+		builder.setConsultaPrevia(consultaPrevia);
+       
+    return builder.build();    
+    }
 	
 	public static String getXmlString(MensajeABDCP c) throws JAXBException{
 		
-	      JAXBContext jaxbContext = JAXBContext.newInstance(MensajeABDCP.class);
+	        JAXBContext jaxbContext = JAXBContext.newInstance(MensajeABDCP.class);
 	        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+	        jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 	        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 	        StringWriter sw = new StringWriter();
 	        jaxbMarshaller.marshal(c, sw);

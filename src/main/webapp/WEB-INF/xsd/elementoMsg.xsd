@@ -342,6 +342,7 @@
 			<xsd:element name="FinalRango" type="TipoNumero" minOccurs="0"/>
 			<xsd:element name="TipoPortabilidadCedente" type="TipoPortabilidad"/>
 			<xsd:element name="TipoPortabilidadReceptor" type="TipoPortabilidad" minOccurs="0"/>
+			
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="TipoListaRangosNumeracion">

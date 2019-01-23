@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -19,8 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,7 +43,7 @@ import org.w3c.dom.Document;
 public class Utilitario {
     	
 
-	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\ABDCP\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
+	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
 	
 	
 	public  Document stringToXml(String xmlString) throws ParserConfigurationException, SAXException, IOException{
@@ -48,11 +51,23 @@ public class Utilitario {
 		
 	     DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 	     DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-	     InputStream inputStream = new    ByteArrayInputStream(xmlString.getBytes());	     
+	     InputStream inputStream = new    ByteArrayInputStream(xmlString.getBytes("UTF-8"));	     
 	     return docBuilder.parse(inputStream);
 	}
 	
-	 
+	
+	public <T> T converXmlToObject(Class clase,String xmlString) throws JAXBException, UnsupportedEncodingException{
+		 InputStream inputStream = new  ByteArrayInputStream(xmlString.getBytes("UTF-8"));	  
+		JAXBContext jaxbContext = JAXBContext.newInstance(clase);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		
+		return (T) jaxbUnmarshaller.unmarshal(inputStream);
+		
+		
+	}
+	
+	
+	
 	
 	
 	
@@ -65,7 +80,7 @@ public class Utilitario {
 	                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	            Schema schema = factory.newSchema(new File(XSD_FILE));
 	            Validator validator = schema.newValidator();
-	            validator.validate(new StreamSource(new ByteArrayInputStream(xmslMsg.getBytes()) ));
+	            validator.validate(new StreamSource(new ByteArrayInputStream(xmslMsg.getBytes("UTF-8")) ));
 	        } catch (IOException | SAXException e) {
                 e.printStackTrace();
 	        	
