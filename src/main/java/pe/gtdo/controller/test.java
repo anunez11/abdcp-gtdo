@@ -27,8 +27,7 @@ public class test {
 	public static void main(String[] args) throws AbdcpException, JAXBException {
 		// TODO Auto-generated method stub
 		
-		ClienteSoap soap= new ClienteSoap();
-		
+		ClienteSoap soap= new ClienteSoap();		
 		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
 		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "", "", getXmlString( ));
 		

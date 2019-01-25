@@ -24,6 +24,7 @@ public  class FechaUtil {
 	private DateTimeFormatter formatter;
 	private String formatDateTime="yyyy-MM-dd HH:mm";
 	private String formatDate="yyyy-MM-dd";
+	private String formatDate2="yyyyMMddHHmmss";
 	
 	
 	
@@ -115,4 +116,12 @@ public  class FechaUtil {
         return formato.format(fecha);
     }
 	
+	public String parseDateTimeToString(LocalDateTime date,String formato) throws Exception{
+		try{
+			this.formatter=DateTimeFormatter.ofPattern(formato);
+			return date.format(formatter);
+		}catch(Exception e){
+			throw new AbdcpException(Status.BAD_REQUEST, "  La fecha debe tener el siguiente formato "+formato);
+		}
+	}
 }

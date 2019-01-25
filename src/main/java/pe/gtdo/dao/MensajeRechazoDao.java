@@ -22,5 +22,16 @@ public class MensajeRechazoDao extends TransactionDao {
   		return null;  		
   	} 
 	
+  	
+  	
+  	public MensajeRechazo getMensajeRechazoAbdcp(String tipo,String proceso){
+  		
+  		String sql="select *  from mensaje_rechazo where '"+tipo+"'= any(mensaje_rechazado) and es_activo=true and proceso='"+proceso+"' and  participante_rechaza='ABDCP' order by random() limit 1" ;
+  		
+  		List<MensajeRechazo> lista = crudService.findByNativeQuery(sql, MensajeRechazo.class);
+  		if(lista.size()>0) lista.get(0);
+  		return null;
+  		
+  	}
 	
 }
