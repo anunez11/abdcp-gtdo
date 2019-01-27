@@ -1,6 +1,7 @@
 package pe.gtdo.controller;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ import pe.gtdo.tipo.TipoSolicitudAceptadaCedente;
 import pe.gtdo.tipo.TipoSolicitudPortabilidad;
 import pe.gtdo.tipo.TipoSolicitudProcedente;
 import pe.gtdo.util.FechaUtil;
+import pe.gtdo.util.Utilitario;
 import pe.gtdo.util.constante.Proceso;
 
 
@@ -35,6 +37,9 @@ public class MensajeController {
 	
 	@Inject
 	FechaUtil fechaUtil;
+	
+	@Inject
+	Utilitario utilitario;
 	
 	public void enviarNI(String destinatario,String causaNoIntegridad,MensajeABDCP mensaje) throws Exception{
 		
@@ -52,7 +57,7 @@ public class MensajeController {
 	    noIntegridad.setCausaNoIntegridad(causaNoIntegridad);
 	    builder.setNoIntegridad(noIntegridad);	
 	    builder.setCuerpoIdMensaje("NI");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	}
 	
 	public void enviarNE(String destinatario,String codigo,String descripcionCodigoError,MensajeABDCP mensaje) throws Exception{
@@ -68,7 +73,7 @@ public class MensajeController {
 	    notificacionError.setDescripcionCodigoError(descripcionCodigoError);
 	    builder.setNotificacionError(notificacionError);
 	    builder.setCuerpoIdMensaje("NE");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	}
 	
 	
@@ -90,7 +95,7 @@ public class MensajeController {
 		 asignacionNumeroConsultaPrevia.setIdentificacionSolicitud(idSolicitud);
 		 builder.setAsignacionNumeroConsultaPrevia(asignacionNumeroConsultaPrevia);
 		 builder.setCuerpoIdMensaje("ANCP");		 
-		 enviar(null,builder.build(),builder.getMensaje());
+		 enviar(null,builder.build());
 		
 	}
 	
@@ -128,7 +133,7 @@ public class MensajeController {
         	    
 	    builder.setConsultaPreviaRechazadaABDCP(consultaPreviaRechazadaABDCP);
 	    builder.setCuerpoIdMensaje("CPRABD");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	
 	}
 	
@@ -157,19 +162,20 @@ public class MensajeController {
 	    envioSolicitudCedente.setEmailContacto(consulta.getEmailContacto());
 	    envioSolicitudCedente.setFaxContacto(consulta.getFaxContacto());
 	    envioSolicitudCedente.setFechaReferenciaABDCP(fecha);
+	    envioSolicitudCedente.setTipoPortabilidadCedente(tipoPortabilidadCedente);
 	    envioSolicitudCedente.setNombreContacto(consulta.getNombreContacto());
 	    envioSolicitudCedente.setNumeracion(numeracion);
 	    envioSolicitudCedente.setNumeroDocumentoIdentidad(consulta.getNumeroDocumentoIdentidad());
 	    envioSolicitudCedente.setTelefonoContacto(consulta.getTelefonoContacto());
 	    envioSolicitudCedente.setTipoDocumentoIdentidad(consulta.getTipoDocumentoIdentidad());
 	    envioSolicitudCedente.setTipoServicio(consulta.getTipoServicio());
-	    
-	    envioSolicitudCedente.setTipoPortabilidadCedente(tipoPortabilidadCedente);
+	   
+	   
 	    
 	    	    
 	    builder.setEnvioSolicitudCedente(envioSolicitudCedente);
 	    builder.setCuerpoIdMensaje("ECPC");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	    
 	}
 	
@@ -210,7 +216,7 @@ public class MensajeController {
 	    
 	    builder.setConsultaPreviaObjecionConcesionarioCedente(consultaPreviaObjecionConcesionarioCedente);	    
 	    builder.setCuerpoIdMensaje("CPOCC");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	}
 	
 	
@@ -236,7 +242,7 @@ public class MensajeController {
 	    consultaPreviaAceptadaCedente.setObservaciones(observaciones);
 	    builder.setConsultaPreviaAceptadaCedente(consultaPreviaAceptadaCedente);
 	    builder.setCuerpoIdMensaje("CPAC");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	}
 	
 	
@@ -261,18 +267,18 @@ public class MensajeController {
 	    consultaPreviaProcedente.setFechaTerminoContratoEquipo(fechaTerminoContratoEquipo);
 	    builder.setConsultaPreviaProcedente(consultaPreviaProcedente);
 	    builder.setCuerpoIdMensaje("CPPR");
-	    enviar(null,builder.build(),builder.getMensaje());
+	    enviar(null,builder.build());
 	}
 	
 	
 
-	private void enviar(byte[] archivo,String msg,MensajeABDCP mensaje) throws Exception{
-		
+	private void enviar(byte[] archivo,MensajeABDCP mensaje) throws Exception{
+		String msg=utilitario.converObjectToXmlString(mensaje);
 		ClienteSoap soap= new ClienteSoap();		
 		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
 		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo, "", "", msg);
 		mensajeDao.guardarMensaje(mensaje,msg, "OUT");
-		
+		TimeUnit.SECONDS.sleep(5);
 		
 	}
 	

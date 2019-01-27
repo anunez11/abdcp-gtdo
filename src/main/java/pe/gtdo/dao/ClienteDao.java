@@ -18,7 +18,7 @@ public class ClienteDao extends TransactionDao{
 		 Map<String,Object> parameters=new HashMap<String,Object>();		 
 		 parameters.put("numero", numero);		 
 		 parameters.put("consecionario", consecionario);
-	     List<Cliente> lista=crudService.findWithQuery("select  u Cliente u where u.numero=:numero and u.esActivo=true and u.consecionario=:consecionario", parameters);	     
+	     List<Cliente> lista=crudService.findWithQuery("select  u from Cliente u where u.numero=:numero and u.esActivo=true and u.concesionario=:consecionario", parameters);	     
 		 if(lista.size()>0) return lista.get(0);		 
 		 return null;
 		

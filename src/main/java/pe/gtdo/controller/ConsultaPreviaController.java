@@ -57,15 +57,20 @@ public class ConsultaPreviaController {
 		    case CP : //  se recibe el mensaje se hace la validacion  el adbcp
 		    	      List<TipoRangoNumeracion> rangos = cuerpo.getConsultaPrevia().getNumeracionSolicitada().getRangoNumeracion();
 		    	      for(TipoRangoNumeracion rango:rangos){
-		    	    
-		    	    	  BlacklistAbdcp rechazo = mensajeRechazoDao.getListanegra(null, ConsultaPrevia.CP.getValue(), rango.getInicioRango());
+		    	          String numero=rango.getInicioRango();
+		    	          String tipoPortabilidad=rango.getTipoPortabilidadCedente();
+		    	          String cedente=cuerpo.getConsultaPrevia().getCodigoCedente();
+		    	          String receptor=cuerpo.getConsultaPrevia().getCodigoReceptor();
+		    	          
+		    	          
+		    	    	  BlacklistAbdcp rechazo = mensajeRechazoDao.getListanegra(null, ConsultaPrevia.CP.getValue(), numero);
 		    	    	  if(rechazo!=null){
 		    	             // se envia un mensa de rechazo
 		    	    		     
 		    	    		   MensajeRechazo msgrRechazo = mensajeRechazoDao.getMensajeRechazo(rechazo.getCodigoRechazo());
 		    	    		   
 		    	    		   // NI  O -// NE
-		    	    		   notificacionErrorController.enviarMensaje(msgrRechazo, cabecera.getRemitente(), mensaje);
+		    	    		   notificacionErrorController.enviarMensaje(msgrRechazo, receptor, mensaje);
 		    	    		   
 		    	    		   
 		    	    		  
@@ -73,26 +78,22 @@ public class ConsultaPreviaController {
 		    	    		 // se envia un mensaje ANCP
 		    	    		  // pregunamos si el  numero tine rechazo despues de enviar un mensaje ANCP
 		    	    		  String idSolicutud=mensajeDao.generarCodigo("00", Proceso.CP.getValue());
-		    	    		  mensajeController.enviarANCP(mensaje, cabecera.getRemitente(),
+		    	    		  mensajeController.enviarANCP(mensaje,receptor,
 		    	    				  idSolicutud
 		    	    				  , rango.getInicioRango());
-		    	    		  BlacklistAbdcp rechazo2 = mensajeRechazoDao.getListanegra(ConsultaPrevia.ANCP.getValue(),null, rango.getInicioRango());
+		    	    		  
+		    	    		  BlacklistAbdcp rechazo2 = mensajeRechazoDao.getListanegra(ConsultaPrevia.ANCP.getValue(),null, numero);
 		    	    		  // SI LO tienen  enviamos el mensaje CPRABD
-		    	    		  if(rechazo2!=null){
-		    	    			  //
-		    	    			  //MensajeRechazo msgrRechazo2 = mensajeRechazoDao.getMensajeRechazo(rechazo2.getCodigoRechazo());
-		    	    			  mensajeController.enviarCPRABD( idSolicutud,  cabecera.getRemitente(),
+		    	    		  if(rechazo2!=null){		    	    			
+		    	    			  mensajeController.enviarCPRABD( idSolicutud,  receptor,
 		    	    					  rango.getInicioRango(), rechazo2.getCodigoRechazo(), null, null, 
 		    	    					  null, 
 		    	    					  null,
 		    	    					  null);
 		    	    			  
-		    	    		  }else{
-		    	    			  
-		    	    			  mensajeController.enviarECPC(mensaje, idSolicutud, cabecera.getDestinatario(), rango.getInicioRango(), rango.getTipoPortabilidadReceptor());
-		    	    			  
-		    	    		  }
-		    	    		  // deelo contrario enviamos el mensaje 
+		    	    		  }else  mensajeController.enviarECPC(mensaje, idSolicutud, cedente, numero,tipoPortabilidad);
+		    	    			
+		    	    		 
 		    	    	  }
 		    	    	  
 		    	    	  
@@ -124,7 +125,7 @@ public class ConsultaPreviaController {
 		    break ;
 		    
 		    case CPOCC :
-		    	              TipoObjecionConcesionarioCedente msgCPOCC = cuerpo.getObjecionConcesionarioCedente();
+		    	              TipoObjecionConcesionarioCedente msgCPOCC = cuerpo.getConsultaPreviaObjecionConcesionarioCedente();
 		    	              mensajeController.enviarCPRABD( cabecera.getIdentificadorProceso(), "46",
 		    	            		  msgCPOCC.getNumeracion(), msgCPOCC.getCausaObjecion(),
 		    	            		  msgCPOCC.getMonto(), msgCPOCC.getMoneda(), msgCPOCC.getFechaActivacion(), 

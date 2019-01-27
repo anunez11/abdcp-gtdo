@@ -97,11 +97,11 @@ public class test {
 		
 		List<TipoRangoNumeracion> numeracionSolicitada=new ArrayList<TipoRangoNumeracion>();
 		TipoRangoNumeracion rango=new TipoRangoNumeracion();
-		rango.setInicioRango("954180317");
+		rango.setInicioRango("654180317");
 		rango.setTipoPortabilidadCedente("01");
 		
 		numeracionSolicitada.add(rango);
-		numeracionSolicitada.add(rango);
+	//	numeracionSolicitada.add(rango);
 		
 		
 		TipoListaRangosNumeracion lista= new TipoListaRangosNumeracion();
@@ -133,7 +133,7 @@ public class test {
 		builder.setCabeceraRemitente("46");
 		builder.setConsultaPrevia(consultaPrevia);
        
-    return builder.build();    
+    return  getXmlString( builder.build()) ;    
     }
 	
 	public static String getXmlString(MensajeABDCP c) throws JAXBException{

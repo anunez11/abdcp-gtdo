@@ -3,6 +3,7 @@ package pe.gtdo.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -61,6 +62,7 @@ public class ABDCPController {
 			    if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
 				consultaPreviaController.ejecutarProceso(mensaje);
 				notificacionErrorController.ejecutarProceso(mensaje);
+				TimeUnit.SECONDS.sleep(10);
 			
 			
 		} catch (Exception e) {

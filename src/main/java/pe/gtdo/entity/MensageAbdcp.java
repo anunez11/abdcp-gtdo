@@ -4,6 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.w3c.dom.Document;
+
+import pe.gtdo.entitymanager.adapter.ListStringUserType;
+import pe.gtdo.entitymanager.adapter.XmlStringUsersType;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -15,6 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="mensage_abdcp")
 @NamedQuery(name="MensageAbdcp.findAll", query="SELECT m FROM MensageAbdcp m")
+@TypeDefs({ @TypeDef(name = "XmlStringUsersType", typeClass = XmlStringUsersType.class) })
 public class MensageAbdcp implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -27,7 +36,7 @@ public class MensageAbdcp implements Serializable {
 	private String emisor;
 
 	@Column(name="es_activo")
-	private Boolean esActivo;
+	private Boolean esActivo=true;
 
 	@Column(name="fecha_creacion")
 	private LocalDateTime fechaCreacion=LocalDateTime.now();
@@ -40,10 +49,13 @@ public class MensageAbdcp implements Serializable {
 
 	@Column(name="id_mensaje")
 	private String idMensaje;
-
-	private String request;
-
-	private String response;
+	
+	
+	
+	@Type(type = "XmlStringUsersType")
+	private Document request;
+	@Type(type = "XmlStringUsersType")
+	private Document response;
 
 	@Column(name="codigo_mensage")
 	private String codigoMensage;
@@ -140,19 +152,21 @@ public class MensageAbdcp implements Serializable {
 		this.idMensaje = idMensaje;
 	}
 
-	public String getRequest() {
-		return this.request;
+
+
+	public Document getRequest() {
+		return request;
 	}
 
-	public void setRequest(String request) {
+	public void setRequest(Document request) {
 		this.request = request;
 	}
 
-	public String getResponse() {
-		return this.response;
+	public Document getResponse() {
+		return response;
 	}
 
-	public void setResponse(String response) {
+	public void setResponse(Document response) {
 		this.response = response;
 	}
 

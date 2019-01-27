@@ -1,10 +1,15 @@
 package pe.gtdo.dao;
 
+import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
 
 import pe.gtdo.entity.MensageAbdcp;
 import pe.gtdo.tipo.MensajeABDCP;
@@ -41,7 +46,11 @@ public class MensajeDao extends TransactionDao {
 		   data.setIdMensaje(cabecera.getIdentificadorMensaje());
 		   data.setIdProceso(cabecera.getIdentificadorProceso());
 		   data.setIdSolicitud(cabecera.getIdentificadorProceso());
-		   data.setRequest(msg);
+		   
+		   
+		   DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document document = db.parse(new ByteArrayInputStream(msg.getBytes("UTF-8")));		   
+		   data.setRequest(document);
 		   create(data);
 		
 		
