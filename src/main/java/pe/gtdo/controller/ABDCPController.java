@@ -12,6 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import pe.gtdo.core.logging.AbdcpLogger;
+import pe.gtdo.dao.MensajeDao;
 import pe.gtdo.dao.MensajeErrorDao;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.util.Utilitario;
@@ -34,6 +35,9 @@ public class ABDCPController {
 	MensajeErrorDao msgError;	
 	
 	@Inject
+	MensajeDao mensajeDao;
+	
+	@Inject
 	ConsultaPreviaController consultaPreviaController;
 	 
 	@Inject 
@@ -48,13 +52,13 @@ public class ABDCPController {
 		// validomos que el usuario exiws
 		// validamos que el paswor existe
 		
-		// validamos qie el mesaje sea correcto ..	
-
-		//xmlMsg="<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+xmlMsg;
-		if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
+		
 		try {			
 			    MensajeABDCP mensaje = utilitario.converXmlToObject(MensajeABDCP.class, xmlMsg);
-		        
+			    
+			    
+			    mensajeDao.guardarMensaje(mensaje,xmlMsg ,"IN");			    
+			    if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
 				consultaPreviaController.ejecutarProceso(mensaje);
 				notificacionErrorController.ejecutarProceso(mensaje);
 			

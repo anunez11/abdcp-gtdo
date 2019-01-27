@@ -30,10 +30,10 @@ public class MensageAbdcp implements Serializable {
 	private Boolean esActivo;
 
 	@Column(name="fecha_creacion")
-	private LocalDateTime fechaCreacion;
+	private LocalDateTime fechaCreacion=LocalDateTime.now();
 
 	@Column(name="fecha_envio")
-	private LocalDateTime fechaEnvio;
+	private LocalDateTime fechaEnvio=LocalDateTime.now();
 
 	@Column(name="fecha_respuesta")
 	private LocalDateTime fechaRespuesta;
@@ -64,7 +64,7 @@ public class MensageAbdcp implements Serializable {
 	private String direccionMensaje;
 	
 	@Column(name="fecha_modificacion")
-	private LocalDateTime  fechaModificacion;
+	private LocalDateTime  fechaModificacion=LocalDateTime.now();
 	
 	
 	@Version
