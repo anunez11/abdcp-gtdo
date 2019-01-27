@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBException;
 
 import pe.gtdo.cliente.ClienteSoap;
 import pe.gtdo.dao.MensajeDao;
-import pe.gtdo.entity.MensageAbdcp;
+import pe.gtdo.entity.MensajeAbdcp;
 import pe.gtdo.exception.AbdcpException;
 import pe.gtdo.msg.Builder;
 import pe.gtdo.soap.ReceiveMessageResponse;
@@ -267,18 +267,20 @@ public class MensajeController {
 	    consultaPreviaProcedente.setFechaTerminoContratoEquipo(fechaTerminoContratoEquipo);
 	    builder.setConsultaPreviaProcedente(consultaPreviaProcedente);
 	    builder.setCuerpoIdMensaje("CPPR");
-	    enviar(null,builder.build());
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
 	}
 	
 	
 
 	private void enviar(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		String msg=utilitario.converObjectToXmlString(mensaje);
-		ClienteSoap soap= new ClienteSoap();		
+		ClienteSoap soap= new ClienteSoap();
+		mensajeDao.guardarMensaje(mensaje,msg, "OUT");
 		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
 		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo, "", "", msg);
-		mensajeDao.guardarMensaje(mensaje,msg, "OUT");
-		TimeUnit.SECONDS.sleep(5);
+		
+	//	TimeUnit.SECONDS.sleep(5);
 		
 	}
 	

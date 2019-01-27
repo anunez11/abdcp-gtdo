@@ -21,10 +21,10 @@ import java.time.LocalDateTime;
  * 
  */
 @Entity
-@Table(name="mensage_abdcp")
-@NamedQuery(name="MensageAbdcp.findAll", query="SELECT m FROM MensageAbdcp m")
+@Table(name="mensaje_abdcp")
+@NamedQuery(name="MensajeAbdcp.findAll", query="SELECT m FROM MensajeAbdcp m")
 @TypeDefs({ @TypeDef(name = "XmlStringUsersType", typeClass = XmlStringUsersType.class) })
-public class MensageAbdcp implements Serializable {
+public class MensajeAbdcp implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -57,8 +57,8 @@ public class MensageAbdcp implements Serializable {
 	@Type(type = "XmlStringUsersType")
 	private Document response;
 
-	@Column(name="codigo_mensage")
-	private String codigoMensage;
+	@Column(name="codigo_mensaje")
+	private String codigoMensaje;
 	
 	@Column(name="id_proceso")
 	private String idProceso;
@@ -82,7 +82,7 @@ public class MensageAbdcp implements Serializable {
 	@Version
 	private Long version;
 
-	public MensageAbdcp() {
+	public MensajeAbdcp() {
 	}
 
 	public Long getId() {
@@ -178,12 +178,12 @@ public class MensageAbdcp implements Serializable {
 		this.version = version;
 	}
 
-	public String getCodigoMensage() {
-		return codigoMensage;
+	public String getCodigoMensaje() {
+		return codigoMensaje;
 	}
 
-	public void setCodigoMensage(String codigoMensage) {
-		this.codigoMensage = codigoMensage;
+	public void setCodigoMensaje(String codigoMensaje) {
+		this.codigoMensaje = codigoMensaje;
 	}
 
 	public String getIdProceso() {

@@ -62,7 +62,7 @@ public class ABDCPController {
 			    if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
 				consultaPreviaController.ejecutarProceso(mensaje);
 				notificacionErrorController.ejecutarProceso(mensaje);
-				TimeUnit.SECONDS.sleep(10);
+			//	TimeUnit.SECONDS.sleep(10);
 			
 			
 		} catch (Exception e) {

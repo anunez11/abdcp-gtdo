@@ -61,8 +61,6 @@ public class ConsultaPreviaController {
 		    	          String tipoPortabilidad=rango.getTipoPortabilidadCedente();
 		    	          String cedente=cuerpo.getConsultaPrevia().getCodigoCedente();
 		    	          String receptor=cuerpo.getConsultaPrevia().getCodigoReceptor();
-		    	          
-		    	          
 		    	    	  BlacklistAbdcp rechazo = mensajeRechazoDao.getListanegra(null, ConsultaPrevia.CP.getValue(), numero);
 		    	    	  if(rechazo!=null){
 		    	             // se envia un mensa de rechazo

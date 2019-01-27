@@ -26,7 +26,7 @@ public class MensageAbdcpHist implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "id")	
-	private MensageAbdcp id;
+	private MensajeAbdcp id;
 	
 	
 	private String destino;
@@ -231,12 +231,12 @@ public class MensageAbdcpHist implements Serializable {
 	}
 
 
-	public MensageAbdcp getId() {
+	public MensajeAbdcp getId() {
 		return id;
 	}
 
 
-	public void setId(MensageAbdcp id) {
+	public void setId(MensajeAbdcp id) {
 		this.id = id;
 	}
     

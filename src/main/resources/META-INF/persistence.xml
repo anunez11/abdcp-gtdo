@@ -9,7 +9,7 @@
 		<class>pe.gtdo.entity.EstadoNumeracion</class>
 		<class>pe.gtdo.entity.EstadoProceso</class>
 		<class>pe.gtdo.entity.GeneradorCodigo</class>
-		<class>pe.gtdo.entity.MensageAbdcp</class>
+		<class>pe.gtdo.entity.MensajeAbdcp</class>
 		<class>pe.gtdo.entity.Modalidad</class>
 		<class>pe.gtdo.entity.MotivoRetorno</class>
 		<class>pe.gtdo.entity.Participante</class>
