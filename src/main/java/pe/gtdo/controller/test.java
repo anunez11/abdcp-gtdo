@@ -62,7 +62,7 @@ public class test {
 		rango.setTipoPortabilidadCedente("01");
 		
 		numeracionSolicitada.add(rango);
-		numeracionSolicitada.add(rango);
+	//	numeracionSolicitada.add(rango);
 		
 		
 		TipoListaRangosNumeracion lista= new TipoListaRangosNumeracion();

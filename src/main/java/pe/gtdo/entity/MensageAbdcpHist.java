@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import java.sql.Timestamp;
+
+
 import java.time.LocalDateTime;
 
 
@@ -13,15 +14,21 @@ import java.time.LocalDateTime;
  * 
  */
 @Entity
-@Table(name="mensage_abdcp")
-@NamedQuery(name="MensageAbdcp.findAll", query="SELECT m FROM MensageAbdcp m")
-public class MensageAbdcp implements Serializable {
+@Table(name="mensage_abdcp_hist")
+@NamedQuery(name="MensageAbdcpHist.findAll", query="SELECT m FROM MensageAbdcpHist m")
+public class MensageAbdcpHist implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name="id_hist")
+	private Long idHist;
 
+	@ManyToOne
+	@JoinColumn(name = "id")	
+	private MensageAbdcp id;
+	
+	
 	private String destino;
 
 	private String emisor;
@@ -70,16 +77,19 @@ public class MensageAbdcp implements Serializable {
 	@Version
 	private Long version;
 
-	public MensageAbdcp() {
+	public MensageAbdcpHist() {
 	}
 
-	public Long getId() {
-		return this.id;
+
+	public Long getIdHist() {
+		return idHist;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+
+	public void setIdHist(Long idHist) {
+		this.idHist = idHist;
 	}
+
 
 	public String getDestino() {
 		return this.destino;
@@ -218,6 +228,16 @@ public class MensageAbdcp implements Serializable {
 
 	public void setFechaModificacion(LocalDateTime fechaModificacion) {
 		this.fechaModificacion = fechaModificacion;
+	}
+
+
+	public MensageAbdcp getId() {
+		return id;
+	}
+
+
+	public void setId(MensageAbdcp id) {
+		this.id = id;
 	}
     
 	

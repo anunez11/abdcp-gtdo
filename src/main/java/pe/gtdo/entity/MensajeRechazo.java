@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -25,6 +27,7 @@ public class MensajeRechazo {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id_mensaje_rechazo")
 	private Long idMensajeRechazo;
 
@@ -34,8 +37,9 @@ public class MensajeRechazo {
 	
 	private String proceso;
 	
-	@Column(name="mensaje_rechazado")
-	private String mensajeRechazado;
+	
+	@Column(name="tipo_mensaje")
+	private String tipoMensaje;
 	
 	@Column(name="mensaje_rechazado")
 	@Type(type = "ListStringUserType")
@@ -76,13 +80,7 @@ public class MensajeRechazo {
 		this.proceso = proceso;
 	}
 
-	public String getMensajeRechazado() {
-		return mensajeRechazado;
-	}
 
-	public void setMensajeRechazado(String mensajeRechazado) {
-		this.mensajeRechazado = mensajeRechazado;
-	}
 
 	public List<String> getParticipante_rechaza() {
 		return participante_rechaza;
@@ -98,6 +96,14 @@ public class MensajeRechazo {
 
 	public void setEsActivo(Boolean esActivo) {
 		this.esActivo = esActivo;
+	}
+
+	public String getTipoMensaje() {
+		return tipoMensaje;
+	}
+
+	public void setTipoMensaje(String tipoMensaje) {
+		this.tipoMensaje = tipoMensaje;
 	}
 
 	

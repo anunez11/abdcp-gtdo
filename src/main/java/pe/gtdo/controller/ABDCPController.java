@@ -33,7 +33,13 @@ public class ABDCPController {
 	@Inject
 	MensajeErrorDao msgError;	
 	
-	private Boolean isMediador=false;
+	@Inject
+	ConsultaPreviaController consultaPreviaController;
+	 
+	@Inject 
+	NotificacionErrorController notificacionErrorController;
+	
+	//private Boolean isMediador=false;
 	//private Integer consecionario=46;
 	
 	public String getResultado(String userID, String password, String xmlMsg,
@@ -47,9 +53,13 @@ public class ABDCPController {
 		//xmlMsg="<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+xmlMsg;
 		if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
 		try {			
-			MensajeABDCP mensaje = utilitario.converXmlToObject(MensajeABDCP.class, xmlMsg);
-			LOG.info("Tipo de mensaje=====>"+mensaje.getCuerpoMensaje().getIdMensaje());
-		} catch (UnsupportedEncodingException | JAXBException e) {
+			    MensajeABDCP mensaje = utilitario.converXmlToObject(MensajeABDCP.class, xmlMsg);
+		        
+				consultaPreviaController.ejecutarProceso(mensaje);
+				notificacionErrorController.ejecutarProceso(mensaje);
+			
+			
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

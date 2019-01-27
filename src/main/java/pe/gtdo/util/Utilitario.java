@@ -43,8 +43,8 @@ import org.w3c.dom.Document;
 public class Utilitario {
     	
 
-	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
-	
+//	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
+	private String XSD_FILE="D:\\ANGEL\\PROYECTOS\\DESARROLLO\\JAVA_CFE\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
 	
 	public  Document stringToXml(String xmlString) throws ParserConfigurationException, SAXException, IOException{
 	

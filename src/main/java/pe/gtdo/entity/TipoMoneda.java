@@ -1,6 +1,7 @@
 package  pe.gtdo.entity;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -15,6 +16,7 @@ public class TipoMoneda implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id_tipo_monedad")
 	private Long idTipoMonedad;
 

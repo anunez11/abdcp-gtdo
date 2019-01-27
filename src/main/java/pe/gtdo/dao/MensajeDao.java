@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import pe.gtdo.tipo.MensajeABDCP;
+
 @ApplicationScoped
 public class MensajeDao extends TransactionDao {
    
@@ -21,5 +23,16 @@ public class MensajeDao extends TransactionDao {
 		List<String> lista = crudService.findWithNativeQuery("select abdcp_stored_codigo(:concesionario,:tipoProceso);", parameters);
 		return lista.get(0);
 	}
+	
+	
+	public void guardarMensaje(MensajeABDCP mensaje,String direccion){
+		
+		
+		
+		
+		
+	}
+	
+	
 	
 }

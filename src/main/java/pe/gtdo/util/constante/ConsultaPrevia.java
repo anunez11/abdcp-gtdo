@@ -12,6 +12,16 @@ public enum ConsultaPrevia {
 	NONE("NONE");
 	
 	private final String value;	
+	
+	
+	
+	
+	
+	public String getValue() {
+		return value;
+	}
+
+
 	private ConsultaPrevia(String value) {
 	       this.value = value;
 	}

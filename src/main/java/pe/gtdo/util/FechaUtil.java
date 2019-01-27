@@ -124,4 +124,13 @@ public  class FechaUtil {
 			throw new AbdcpException(Status.BAD_REQUEST, "  La fecha debe tener el siguiente formato "+formato);
 		}
 	}
+	
+	public String parseDateToString(LocalDate date,String formato) throws Exception{
+		try{
+			this.formatter=DateTimeFormatter.ofPattern(formato);
+			return date.format(formatter);
+		}catch(Exception e){
+			throw new AbdcpException(Status.BAD_REQUEST, "  La fecha debe tener el siguiente formato "+formato);
+		}
+	}
 }

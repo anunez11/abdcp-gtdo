@@ -1,6 +1,8 @@
 package pe.gtdo.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+
 import javax.persistence.*;
 
 
@@ -16,6 +18,7 @@ public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id_cliente")
 	private Long idCliente;
 
@@ -38,6 +41,88 @@ public class Cliente implements Serializable {
 	@Column(name="es_activo")
 	private Boolean esActivo;
 
+	private String modalidad;
+	
+	@Column(name="monto_deuda")
+	private Double montoDeuda;
+	
+	@Column(name="fecha_vencimiento_ultima_factura")
+	private LocalDate fechaVencimientoUltimaFactura ;
+	
+	private String moneda ;
+	
+	@Column(name="fecha_activacion")
+	private LocalDate fechaActivacion ;
+	
+	public String getModalidad() {
+		return modalidad;
+	}
+
+	public void setModalidad(String modalidad) {
+		this.modalidad = modalidad;
+	}
+
+	public Double getMontoDeuda() {
+		return montoDeuda;
+	}
+
+	public void setMontoDeuda(Double montoDeuda) {
+		this.montoDeuda = montoDeuda;
+	}
+
+	public LocalDate getFechaVencimientoUltimaFactura() {
+		return fechaVencimientoUltimaFactura;
+	}
+
+	public void setFechaVencimientoUltimaFactura(
+			LocalDate fechaVencimientoUltimaFactura) {
+		this.fechaVencimientoUltimaFactura = fechaVencimientoUltimaFactura;
+	}
+
+	public String getMoneda() {
+		return moneda;
+	}
+
+	public void setMoneda(String moneda) {
+		this.moneda = moneda;
+	}
+
+
+
+	public LocalDate getFechaTerminoContratoEquipo() {
+		return fechaTerminoContratoEquipo;
+	}
+
+	public void setFechaTerminoContratoEquipo(LocalDate fechaTerminoContratoEquipo) {
+		this.fechaTerminoContratoEquipo = fechaTerminoContratoEquipo;
+	}
+
+	public String getEstadoServicio() {
+		return estadoServicio;
+	}
+
+	public void setEstadoServicio(String estadoServicio) {
+		this.estadoServicio = estadoServicio;
+	}
+
+	public String getTipoServicio() {
+		return tipoServicio;
+	}
+
+	public void setTipoServicio(String tipoServicio) {
+		this.tipoServicio = tipoServicio;
+	}
+
+	@Column(name="fecha_termino_contrato_equipo")
+	private LocalDate fechaTerminoContratoEquipo;
+	
+	@Column(name="estado_servicio")
+	private String estadoServicio ;
+	
+	@Column(name="tipo_servicio")
+	private String  tipoServicio ;
+	
+	
 	public Cliente() {
 	}
 
@@ -103,6 +188,14 @@ public class Cliente implements Serializable {
 
 	public void setEsActivo(Boolean esActivo) {
 		this.esActivo = esActivo;
+	}
+
+	public LocalDate getFechaActivacion() {
+		return fechaActivacion;
+	}
+
+	public void setFechaActivacion(LocalDate fechaActivacion) {
+		this.fechaActivacion = fechaActivacion;
 	}
 
 	
