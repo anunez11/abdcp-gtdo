@@ -18,6 +18,7 @@ import pe.gtdo.tipo.TipoCuerpoMensaje;
 import pe.gtdo.tipo.TipoListaRangosNumeracion;
 import pe.gtdo.tipo.TipoRangoNumeracion;
 import pe.gtdo.tipo.TipoSolicitudPortabilidad;
+import pe.gtdo.tipo.TipoSolicitudRetorno;
 
 public class test {
 
@@ -26,21 +27,54 @@ public class test {
 
 	public static void main(String[] args) throws AbdcpException, JAXBException {
 		// TODO Auto-generated method stub
+		String data="46190119050000008";
 		
-		ClienteSoap soap= new ClienteSoap();		
+		System.out.println("========================================================>");
+		System.out.println(data.substring(8, 10));
+		System.out.println("========================================================>");
+	/*	ClienteSoap soap= new ClienteSoap();		
 		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
-		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "", "", getXmlString( ));
+		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "", "", getXmlString() );
 		
 		System.out.println("========================================================>");
 		System.out.println(respuesta.getResponse());
 		System.out.println("========================================================>");
-		
-		
-		
-		
-
+		*/
 	}
 	
+	
+	public static String getXmlStringRetorno() throws JAXBException{
+		
+		TipoSolicitudRetorno solicitudRetorno=new TipoSolicitudRetorno();
+		solicitudRetorno.setCodigoCedente("35");
+		solicitudRetorno.setCodigoReceptor("46");
+		
+		solicitudRetorno.setEmailContacto("angel@gmail.com");
+		solicitudRetorno.setFaxContacto("abv123456789");
+		solicitudRetorno.setNombreContacto("Angel NUñez Berrospi");
+		solicitudRetorno.setFechaEjecucionRetorno("20190131151020");
+		solicitudRetorno.setMotivoRetorno("03");
+		solicitudRetorno.setNumeracionARetornar("954180340");
+		solicitudRetorno.setObservaciones(" jaja ");
+		solicitudRetorno.setTelefonoContacto("954180317");
+		
+		Builder builder= new Builder();
+		builder.setCodigoMsg("SR");
+		builder.setCabeceraDestinatario("00");
+		builder.setCabeceraFechaCreacionMensaje("20190129172045");
+		builder.setCabeceraIdentificadorMensaje("46201901290000001");
+		builder.setCabeceraIdentificadorProceso("46190129020000008");
+		builder.setCabeceraRemitente("46");
+		builder.setSolicitudRetorno(solicitudRetorno);
+		
+		
+		
+       
+         return  getXmlString( builder.build()) ;    
+		
+		
+		
+	}
 	
 	
 	public static MensajeABDCP genenerarMensage(){
@@ -135,6 +169,12 @@ public class test {
        
     return  getXmlString( builder.build()) ;    
     }
+	
+	
+	
+	
+	
+	
 	
 	public static String getXmlString(MensajeABDCP c) throws JAXBException{
 		

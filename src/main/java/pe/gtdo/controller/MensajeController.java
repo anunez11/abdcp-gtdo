@@ -9,13 +9,15 @@ import javax.xml.bind.JAXBException;
 
 import pe.gtdo.cliente.ClienteSoap;
 import pe.gtdo.dao.MensajeDao;
-import pe.gtdo.entity.MensajeAbdcp;
+import pe.gtdo.entity.MensageAbdcp;
 import pe.gtdo.exception.AbdcpException;
 import pe.gtdo.msg.Builder;
 import pe.gtdo.soap.ReceiveMessageResponse;
 import pe.gtdo.tipo.MensajeABDCP;
+import pe.gtdo.tipo.TipoAceptacionRetorno;
 import pe.gtdo.tipo.TipoAsignacionNumeroSolicitud;
 import pe.gtdo.tipo.TipoCuerpoMensaje;
+import pe.gtdo.tipo.TipoDenegacionRetorno;
 import pe.gtdo.tipo.TipoEnvioSolicitudCedente;
 import pe.gtdo.tipo.TipoNoIntegridad;
 import pe.gtdo.tipo.TipoNotificacionError;
@@ -24,6 +26,7 @@ import pe.gtdo.tipo.TipoRechazadaABDCP;
 import pe.gtdo.tipo.TipoSolicitudAceptadaCedente;
 import pe.gtdo.tipo.TipoSolicitudPortabilidad;
 import pe.gtdo.tipo.TipoSolicitudProcedente;
+import pe.gtdo.tipo.TipoSolicitudRetorno;
 import pe.gtdo.util.FechaUtil;
 import pe.gtdo.util.Utilitario;
 import pe.gtdo.util.constante.Proceso;
@@ -255,7 +258,7 @@ public class MensajeController {
 
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("0", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
 	    builder.setCabeceraRemitente("00");
 	    builder.setCabeceraDestinatario(destinatario);	    
@@ -270,6 +273,212 @@ public class MensajeController {
 	    MensajeABDCP data = builder.build();
 	    enviar(null,data);
 	}
+	
+	
+	
+	public void enviarSRC(MensajeABDCP mensaje) throws Exception{
+		
+		String idSolicitud=mensaje.getCabeceraMensaje().getIdentificadorProceso();
+		String destinatario=mensaje.getCuerpoMensaje().getSolicitudRetorno().getCodigoCedente();
+		String receptor=mensaje.getCuerpoMensaje().getSolicitudRetorno().getCodigoReceptor();
+		TipoSolicitudRetorno data = mensaje.getCuerpoMensaje().getSolicitudRetorno();
+		
+		
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);
+	    
+	    TipoSolicitudRetorno solicitudRetorno=new TipoSolicitudRetorno();
+	    solicitudRetorno.setCodigoCedente(destinatario);
+	    solicitudRetorno.setCodigoReceptor(receptor);
+	    solicitudRetorno.setEmailContacto(data.getEmailContacto());
+	    solicitudRetorno.setFaxContacto(data.getFaxContacto());
+	    solicitudRetorno.setFechaEjecucionRetorno(data.getFechaEjecucionRetorno());
+	    solicitudRetorno.setMotivoRetorno(data.getMotivoRetorno());
+	    solicitudRetorno.setNombreContacto(data.getNombreContacto());
+	    solicitudRetorno.setNumeracionARetornar(data.getNumeracionARetornar());
+	    solicitudRetorno.setObservaciones(data.getObservaciones());
+	    solicitudRetorno.setTelefonoContacto(data.getTelefonoContacto());
+	    builder.setSolicitudRetorno(solicitudRetorno);
+	    builder.setCuerpoIdMensaje("SR");
+	    MensajeABDCP dato = builder.build();
+	    enviar(null,dato);
+	    
+	    
+		
+	}
+	public void enviarAR(MensajeABDCP mensaje) throws Exception{
+		
+		String idSolicitud=mensaje.getCabeceraMensaje().getIdentificadorProceso();
+		String destinatario=mensaje.getCuerpoMensaje().getSolicitudRetorno().getCodigoReceptor();
+		
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+		
+	    TipoAceptacionRetorno aceptacionRetorno= new TipoAceptacionRetorno();
+	    aceptacionRetorno.setFechaEjecucionRetorno(fechaUtil.parseDateTimeToString(LocalDateTime.now().plusDays(1), "yyyyMMddHHmmss"));
+	    builder.setAceptacionRetorno(aceptacionRetorno);
+	    builder.setCuerpoIdMensaje("AR");
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
+	}
+	
+	public void enviarDR(MensajeABDCP mensaje,String causaRechazo) throws Exception{
+		
+		
+		String idSolicitud=mensaje.getCabeceraMensaje().getIdentificadorProceso();
+		String destinatario=mensaje.getCuerpoMensaje().getSolicitudRetorno().getCodigoReceptor();
+		
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+		
+	    TipoDenegacionRetorno denegacionRetorno= new TipoDenegacionRetorno();
+	    denegacionRetorno.setCausaRechazo(causaRechazo);
+	    builder.setDenegacionRetorno(denegacionRetorno);
+	    builder.setCuerpoIdMensaje("DR");
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
+		
+	}
+	
+	public void enviarANS ( MensajeABDCP mensaje,String destinatario,String idSolicitud,String numero ) throws Exception{
+		
+		 String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
+		 Builder builder=new Builder();	    
+		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));
+		 builder.setCabeceraIdentificadorProceso(mensaje.getCabeceraMensaje().getIdentificadorProceso());
+		 builder.setCabeceraRemitente("00");
+		 builder.setCabeceraDestinatario(destinatario);
+		 builder.setCabeceraFechaCreacionMensaje(fecha);
+		 
+		 
+		 TipoAsignacionNumeroSolicitud asignacionNumeroSolicitud= new TipoAsignacionNumeroSolicitud();
+		 asignacionNumeroSolicitud.setFechaRecepcionMensajeAnterior(mensaje.getCabeceraMensaje().getFechaCreacionMensaje());
+		 asignacionNumeroSolicitud.setFechaReferenciaABDCP(fecha);
+		 asignacionNumeroSolicitud.setNumeracion(numero);
+		 asignacionNumeroSolicitud.setIdentificacionSolicitud(idSolicitud);
+		 builder.setAsignacionNumeroConsultaPrevia(asignacionNumeroSolicitud);
+		 builder.setCuerpoIdMensaje("ANS");	 
+		 enviar(null,builder.build());
+		
+	}
+	
+	
+	
+	public void enviarRABDCP(String idSolicitud,
+ 			String destinatario,
+ 			String numeracion,String causaRechazo,
+ 			String monto,
+ 			String moneda,
+ 			String fechaActivacion,
+ 			String fechaTerminoContratoEquipo,
+ 			String fechaVencimiento) throws Exception{
+		
+		
+		 String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
+		
+		 Builder builder=new Builder();	    
+		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));
+		 builder.setCabeceraIdentificadorProceso(idSolicitud);
+		 builder.setCabeceraRemitente("00");
+		 builder.setCabeceraDestinatario(destinatario);
+		 builder.setCabeceraFechaCreacionMensaje(fecha);
+		
+		 TipoRechazadaABDCP rechazadaABDCP= new TipoRechazadaABDCP();
+		 rechazadaABDCP.setIdentificacionSolicitud(idSolicitud);
+
+		 rechazadaABDCP.setNumeracion(numeracion);
+		 rechazadaABDCP.setIdentificacionSolicitud(idSolicitud);
+		 rechazadaABDCP.setCausaRechazo(causaRechazo);
+		 rechazadaABDCP.setMonto(monto);
+		 rechazadaABDCP.setMoneda(moneda);
+		 rechazadaABDCP.setFechaActivacion(fechaActivacion);
+		 rechazadaABDCP.setFechaVencimiento(fechaVencimiento);		 
+		 builder.setRechazadaABDCP(rechazadaABDCP);
+		builder.setCuerpoIdMensaje("RABDCP");	 
+		enviar(null,builder.build());
+	}
+	
+	
+	public void enviarESC(MensajeABDCP mensajeCP,String idSolicitd,
+ 			String destinatario,
+ 			String numeracion,
+ 			String tipoPortabilidadCedente
+ 			) throws Exception{
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
+		Builder builder=new Builder();
+	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitd);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+	    
+	    
+	    TipoEnvioSolicitudCedente envioSolicitudCedente= new TipoEnvioSolicitudCedente();
+	    
+	    TipoSolicitudPortabilidad consulta = mensajeCP.getCuerpoMensaje().getSolicitudPortabilidad();
+	    envioSolicitudCedente.setCliente(consulta.getCliente());
+	    envioSolicitudCedente.setCodigoCedente(consulta.getCodigoCedente());
+	    envioSolicitudCedente.setCodigoReceptor(consulta.getCodigoReceptor());
+	    envioSolicitudCedente.setEmailContacto(consulta.getEmailContacto());
+	    envioSolicitudCedente.setFaxContacto(consulta.getFaxContacto());
+	    envioSolicitudCedente.setFechaReferenciaABDCP(fecha);
+	    envioSolicitudCedente.setTipoPortabilidadCedente(tipoPortabilidadCedente);
+	    envioSolicitudCedente.setNombreContacto(consulta.getNombreContacto());
+	    envioSolicitudCedente.setNumeracion(numeracion);
+	    envioSolicitudCedente.setNumeroDocumentoIdentidad(consulta.getNumeroDocumentoIdentidad());
+	    envioSolicitudCedente.setTelefonoContacto(consulta.getTelefonoContacto());
+	    envioSolicitudCedente.setTipoDocumentoIdentidad(consulta.getTipoDocumentoIdentidad());
+	    envioSolicitudCedente.setTipoServicio(consulta.getTipoServicio());
+	   
+	    	    
+	    builder.setEnvioSolicitudCedente(envioSolicitudCedente);
+	    builder.setCuerpoIdMensaje("ESC");
+	    enviar(null,builder.build());
+	    
+	}
+	
+	public void enviarSAC(String cedente
+			,String idSolicitud
+			,String fechaActivacion
+			,String fechaTerminoContratoEquipo
+			,String observaciones
+			) throws Exception{
+		
+		
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(cedente, Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente(cedente);
+	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+	    
+	    TipoSolicitudAceptadaCedente  solicitudAceptadaCedente=new TipoSolicitudAceptadaCedente();
+	    solicitudAceptadaCedente.setFechaActivacion(fechaActivacion);
+	    solicitudAceptadaCedente.setFechaTerminoContratoEquipo(fechaTerminoContratoEquipo);
+	    solicitudAceptadaCedente.setObservaciones(observaciones);
+	    builder.setSolicitudAceptadaCedente(solicitudAceptadaCedente);
+	    builder.setCuerpoIdMensaje("SAC");
+	    enviar(null,builder.build());
+	}
+	
+	
+	
 	
 	
 

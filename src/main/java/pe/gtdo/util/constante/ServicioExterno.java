@@ -7,7 +7,6 @@ import pe.gtdo.core.configuration.*;
 
 
 
-//import pe.gob.mpfn.core.configuration.StageDependent;
 
 @ApplicationScoped
 public class ServicioExterno {

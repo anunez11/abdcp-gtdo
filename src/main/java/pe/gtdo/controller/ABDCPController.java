@@ -44,6 +44,10 @@ public class ABDCPController {
 	@Inject 
 	NotificacionErrorController notificacionErrorController;
 	
+	@Inject
+	RetornoPortabilidadController retornoPortabilidadController;
+	
+	
 	//private Boolean isMediador=false;
 	//private Integer consecionario=46;
 	
@@ -62,6 +66,7 @@ public class ABDCPController {
 			    if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
 				consultaPreviaController.ejecutarProceso(mensaje);
 				notificacionErrorController.ejecutarProceso(mensaje);
+				retornoPortabilidadController.ejecutarProceso(mensaje);
 			//	TimeUnit.SECONDS.sleep(10);
 			
 			

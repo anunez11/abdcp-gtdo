@@ -1,33 +1,39 @@
 package pe.gtdo.util.constante;
 
-public enum NotificacionError {
-
-	NI("NI"),
-	NE("NE"),
+public enum Retorno {
+     
+	
+	SR("SR"),	
+	AR("AR") ,
+	DR("DR") ,	
 	NONE("NONE");
 	
-    private final String value;
-    
-    
-    
-    
+	private final String value;	
+	
+	
+	
+	
+	
 	public String getValue() {
 		return value;
 	}
 
 
-	private NotificacionError(String value) {
+	private Retorno(String value) {
 	       this.value = value;
 	}
 	
 
-	  public static NotificacionError fromType( String idTipo ){
-		  NotificacionError[] types = values();
-		  NotificacionError id = NONE;
+	  public static Retorno fromType( String idTipo ){
+		  Retorno[] types = values();
+		  Retorno id = NONE;
 	        for ( int i = 0; i < types.length; i++ ){
 	            id = types[i];
 	            if ( idTipo.equals(id.value))return id;
 	        }
 	        return id;
 	    }	 
+
+	
+	
 }

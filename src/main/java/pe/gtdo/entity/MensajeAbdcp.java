@@ -68,6 +68,7 @@ public class MensajeAbdcp implements Serializable {
 	
 	
 	private String numero;
+	private String proceso;
 	
 	@Column(name="estado_proceso")
 	private String estadoProceso;
@@ -232,6 +233,14 @@ public class MensajeAbdcp implements Serializable {
 
 	public void setFechaModificacion(LocalDateTime fechaModificacion) {
 		this.fechaModificacion = fechaModificacion;
+	}
+
+	public String getProceso() {
+		return proceso;
+	}
+
+	public void setProceso(String proceso) {
+		this.proceso = proceso;
 	}
     
 	

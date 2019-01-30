@@ -25,8 +25,7 @@ import pe.gtdo.util.constante.Proceso;
 @ApplicationScoped
 public class ConsultaPreviaController {
 
-	private String proceso="05";
-	private String abdcp="00";
+
 	
 	
 	@Inject
