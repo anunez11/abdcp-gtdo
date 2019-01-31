@@ -15,13 +15,19 @@ import pe.gtdo.msg.Builder;
 import pe.gtdo.soap.ReceiveMessageResponse;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.tipo.TipoAceptacionRetorno;
+import pe.gtdo.tipo.TipoAcreditacionPagoDeuda;
 import pe.gtdo.tipo.TipoAsignacionNumeroSolicitud;
+import pe.gtdo.tipo.TipoCabeceraMensaje;
+import pe.gtdo.tipo.TipoCancelacionNoProgramacionFecha;
 import pe.gtdo.tipo.TipoCuerpoMensaje;
 import pe.gtdo.tipo.TipoDenegacionRetorno;
 import pe.gtdo.tipo.TipoEnvioSolicitudCedente;
+import pe.gtdo.tipo.TipoFueraLimiteEjecutarPortabilidad;
 import pe.gtdo.tipo.TipoNoIntegridad;
 import pe.gtdo.tipo.TipoNotificacionError;
 import pe.gtdo.tipo.TipoObjecionConcesionarioCedente;
+import pe.gtdo.tipo.TipoProgramacionPortabilidad;
+import pe.gtdo.tipo.TipoProgramadaEjecutarPortabilidad;
 import pe.gtdo.tipo.TipoRechazadaABDCP;
 import pe.gtdo.tipo.TipoSolicitudAceptadaCedente;
 import pe.gtdo.tipo.TipoSolicitudPortabilidad;
@@ -479,13 +485,268 @@ public class MensajeController {
 	
 	
 	
-	
-	
+	public void enviarSPR(String idSolicitud
+			,String destinatario
+			,String fechaActivacion
+			,String fechaTerminoContratoEquipo
+			,String fechaLimiteProgamacion
+			,String fechaLiminteEjecucion
+			) throws Exception{
 
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+	    
+	    TipoSolicitudProcedente solicitudProcedente = new TipoSolicitudProcedente();
+	    solicitudProcedente.setFechaActivacion(fechaActivacion);
+	    solicitudProcedente.setFechaTerminoContratoEquipo(fechaTerminoContratoEquipo);
+	    solicitudProcedente.setFechaLimiteProgramacionPortabilidad(fechaLimiteProgamacion);
+	    solicitudProcedente.setFechaLimiteEjecucionPortabilidad(fechaLiminteEjecucion);
+	    solicitudProcedente.setFechaReferenciaABDCP(fecha);
+	    
+	    builder.setSolicitudProcedente(solicitudProcedente);
+	    builder.setCuerpoIdMensaje("SPR");
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
+	}
+	
+	
+	public void enviarCPSPR(String idSolicitud
+			,String idSolicitudCP
+			,String destinatario			
+			,String fechaLimiteProgamacion
+			,String fechaLiminteEjecucion
+			) throws Exception{
+
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+	    
+	    TipoSolicitudProcedente solicitudProcedente = new TipoSolicitudProcedente();
+	    solicitudProcedente.setNumeroConsultaPrevia(idSolicitudCP);
+	    solicitudProcedente.setFechaLimiteProgramacionPortabilidad(fechaLimiteProgamacion);
+	    solicitudProcedente.setFechaLimiteEjecucionPortabilidad(fechaLiminteEjecucion);	    
+	    solicitudProcedente.setFechaReferenciaABDCP(fecha);
+	    builder.setSolicitudProcedenteConsultaPreviaProcedente(solicitudProcedente);
+	    builder.setCuerpoIdMensaje("CPSPR");
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
+	}
+	
+	public void enviarOCC(String cedente			
+			,String idSolicitd 
+			,String causaObjecion
+			,String fechaActivacion
+			,String fechaTerminoContratoEquipo
+			,String fechaVencimiento
+			,String moneda
+			,String monto
+			,String numeracion
+			
+			) throws Exception{
+		
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(cedente, Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitd);
+	    builder.setCabeceraRemitente(cedente);
+	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+		
+	    TipoObjecionConcesionarioCedente solicitudObjecionConcesionarioCedente= new TipoObjecionConcesionarioCedente();
+	    
+	    
+	    solicitudObjecionConcesionarioCedente.setCausaObjecion(causaObjecion);
+	    solicitudObjecionConcesionarioCedente.setFechaActivacion(fechaActivacion);
+	    solicitudObjecionConcesionarioCedente.setFechaTerminoContratoEquipo(fechaTerminoContratoEquipo);
+	    solicitudObjecionConcesionarioCedente.setFechaVencimiento(fechaVencimiento);
+	    solicitudObjecionConcesionarioCedente.setMoneda(moneda);
+	    solicitudObjecionConcesionarioCedente.setMonto(monto);	    
+	    solicitudObjecionConcesionarioCedente.setNumeracion(numeracion);
+	    
+	    
+	    
+	    builder.setObjecionConcesionarioCedente(solicitudObjecionConcesionarioCedente);
+	    builder.setCuerpoIdMensaje("OCC");
+	    enviar(null,builder.build());
+	}
+	
+	public void enviarAPD(String receptor			
+			,String idSolicitd 			
+			,String documentoAdjunto
+			,String numeracion
+			,byte[] archivo
+			,String entidadPago
+			,String fechaPago
+			,String moneda
+			,String monto
+			,String numeroOperacionPago
+			
+			) throws Exception{
+		
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(receptor, Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitd);
+	    builder.setCabeceraRemitente(receptor);
+	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+		
+	    TipoAcreditacionPagoDeuda acreditacionPagoDeuda= new TipoAcreditacionPagoDeuda();
+	    acreditacionPagoDeuda.setDocumentoAdjunto(documentoAdjunto);
+	    acreditacionPagoDeuda.setEntidadPago(entidadPago);
+	    acreditacionPagoDeuda.setFechaPago(fechaPago);
+	    acreditacionPagoDeuda.setMoneda(moneda);
+	    acreditacionPagoDeuda.setMonto(monto);
+	    acreditacionPagoDeuda.setNumeracion(numeracion);
+	    acreditacionPagoDeuda.setNumeroOperacionPago(numeroOperacionPago);
+
+	    builder.setAcreditacionPagoDeuda(acreditacionPagoDeuda);
+	    builder.setCuerpoIdMensaje("APD");
+	    enviar(archivo,builder.build());
+	}
+	
+	
+	public void enviarAPDC(String cedente	,MensajeABDCP mensaje	,byte[] archivo	
+			
+			
+			) throws Exception{
+		
+		
+		TipoCabeceraMensaje cabecera = mensaje.getCabeceraMensaje();
+		TipoCuerpoMensaje cuerpo = mensaje.getCuerpoMensaje();
+		TipoAcreditacionPagoDeuda deuda=cuerpo.getAcreditacionPagoDeuda();
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(cabecera.getIdentificadorProceso());
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(cedente);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+		
+	    TipoAcreditacionPagoDeuda acreditacionPagoDeuda= new TipoAcreditacionPagoDeuda();
+	    acreditacionPagoDeuda.setDocumentoAdjunto(deuda.getDocumentoAdjunto());
+	    acreditacionPagoDeuda.setEntidadPago(deuda.getEntidadPago());
+	    acreditacionPagoDeuda.setFechaPago(deuda.getFechaPago());
+	    acreditacionPagoDeuda.setMoneda(deuda.getMoneda());
+	    acreditacionPagoDeuda.setMonto(deuda.getMonto());
+	    acreditacionPagoDeuda.setNumeracion(deuda.getNumeracion());
+	    acreditacionPagoDeuda.setNumeroOperacionPago(deuda.getNumeroOperacionPago());
+
+	    builder.setAcreditacionPagoDeuda(acreditacionPagoDeuda);
+	    builder.setCuerpoIdMensaje("APDC");
+	    enviar(archivo,builder.build());
+	}
+	
+	
+	public void enviarCNPF(String idSolicitud
+			
+			,String destinatario	
+			
+			) throws Exception{
+
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
+		String fechaLiminte = fechaUtil.parseDateTimeToString(LocalDateTime.now().plusHours(22), "yyyyMMddHHmmss");	
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(destinatario);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+	    
+	    TipoCancelacionNoProgramacionFecha cancelacion = new TipoCancelacionNoProgramacionFecha();
+	    cancelacion.setFechaLimiteProgramacionPortabilidad(fechaLiminte);
+	    builder.setCancelacionNoProgramacionFecha(cancelacion);
+	    builder.setCuerpoIdMensaje("CNPF");
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
+	}
+    
+	public void enviarPP(
+						  String idSolicitud			
+						, String receptor			
+						, String fechaLiminteEjecucion
+					  ) throws Exception{
+
+		Builder builder=new Builder();
+		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
+		String fechaLiminte = fechaUtil.parseDateTimeToString(LocalDateTime.now().plusHours(22), "yyyyMMddHHmmss");	
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(idSolicitud);
+	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraDestinatario(receptor);	    
+	    builder.setCabeceraFechaCreacionMensaje(fecha);	
+	    
+	    TipoProgramacionPortabilidad programacion = new TipoProgramacionPortabilidad();
+	    programacion.setFechaEjecucionPortabilidad(fechaLiminteEjecucion);
+	    builder.setProgramacionPortabilidad(programacion);	    
+	    builder.setCuerpoIdMensaje("PP");
+	    MensajeABDCP data = builder.build();
+	    enviar(null,data);
+	}
+	
+	
+	public void enviarFLEP(
+			  String idSolicitud			
+			, String receptor
+			, String fechaLiminteProgramacion
+			, String fechaLiminteEjecucion
+		  ) throws Exception{
+
+			Builder builder=new Builder();
+			String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
+			String fechaLiminte = fechaUtil.parseDateTimeToString(LocalDateTime.now().plusHours(22), "yyyyMMddHHmmss");	
+			builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+			builder.setCabeceraIdentificadorProceso(idSolicitud);
+			builder.setCabeceraRemitente("00");
+			builder.setCabeceraDestinatario(receptor);	    
+			builder.setCabeceraFechaCreacionMensaje(fecha);	
+			
+			TipoFueraLimiteEjecutarPortabilidad programacion = new TipoFueraLimiteEjecutarPortabilidad();
+			programacion.setFechaLimiteEjecucionPortabilidad(fechaLiminteEjecucion);
+			programacion.setFechaLimiteProgramacionPortabilidad(fechaLiminteProgramacion);
+			builder.setFueraLimiteEjecutarPortabilidad(programacion)  ;
+			
+			builder.setCuerpoIdMensaje("FLEP");
+			MensajeABDCP data = builder.build();
+			enviar(null,data);
+    }
+	
+	public void enviarPEP(
+			  String idSolicitud			
+			, String destinatario
+			, String fechaLiminteEjecucion
+		  ) throws Exception{
+
+			Builder builder=new Builder();
+			String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");			
+			builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+			builder.setCabeceraIdentificadorProceso(idSolicitud);
+			builder.setCabeceraRemitente("00");
+			builder.setCabeceraDestinatario(destinatario);	    
+			builder.setCabeceraFechaCreacionMensaje(fecha);				
+			TipoProgramadaEjecutarPortabilidad programacion = new TipoProgramadaEjecutarPortabilidad();
+			programacion.setFechaEjecucionPortabilidad(fechaLiminteEjecucion);
+			builder.setProgramadaEjecutarPortabilidad(programacion);			
+			builder.setCuerpoIdMensaje("FLEP");
+			MensajeABDCP data = builder.build();
+			enviar(null,data);
+  }
+	
+	
 	private void enviar(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		String msg=utilitario.converObjectToXmlString(mensaje);
 		ClienteSoap soap= new ClienteSoap();
 		mensajeDao.guardarMensaje(mensaje,msg, "OUT");
+		
 		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
 		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo, "", "", msg);
 		
