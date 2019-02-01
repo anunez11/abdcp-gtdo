@@ -17,7 +17,7 @@ public class NotificacionErrorController {
 	@Inject
 	MensajeController mensajeController;
 	
-	public void ejecutarProceso(MensajeABDCP mensaje){
+	public void ejecutarProceso(byte[] archivo,MensajeABDCP mensaje){
 		TipoCuerpoMensaje cuerpo = mensaje.getCuerpoMensaje();	
 		TipoCabeceraMensaje cabecera = mensaje.getCabeceraMensaje();
 		switch(NotificacionError.fromType(cuerpo.getIdMensaje())){

@@ -1,30 +1,156 @@
 package pe.gtdo.controller;
 
-import javax.faces.bean.ApplicationScoped;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
+import javax.faces.bean.ApplicationScoped;
+import javax.inject.Inject;
+
+import pe.gtdo.dao.ClienteDao;
+import pe.gtdo.dao.MensajeDao;
+import pe.gtdo.dao.MensajeRechazoDao;
+import pe.gtdo.entity.BlacklistAbdcp;
+import pe.gtdo.entity.Cliente;
+import pe.gtdo.entity.MensajeAbdcp;
+import pe.gtdo.entity.MensajeRechazo;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.tipo.TipoCabeceraMensaje;
 import pe.gtdo.tipo.TipoCuerpoMensaje;
+import pe.gtdo.tipo.TipoRangoNumeracion;
+import pe.gtdo.util.FechaUtil;
 import pe.gtdo.util.constante.ConsultaPrevia;
+import pe.gtdo.util.constante.Proceso;
 import pe.gtdo.util.constante.SolicitudPortabilidad;
 
 @ApplicationScoped
 public class SolicitudPortabilidadController {
-
 	
-	public void ejecutarProceso(MensajeABDCP mensaje) throws Exception{
+	@Inject
+	ClienteDao clienteDao;
+	
+	@Inject 
+	MensajeDao mensajeDao;
+	
+	@Inject
+	MensajeRechazoDao mensajeRechazoDao; 
+	
+	@Inject
+	MensajeController mensajeController;
+	
+	@Inject
+	NotificacionErrorController notificacionErrorController;
+	
+	@Inject
+	FechaUtil fechaUtil;
+	
+	@Inject
+	HorarioController horarioController;
+	
+	public void ejecutarProceso(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		
 		TipoCuerpoMensaje cuerpo = mensaje.getCuerpoMensaje();	
 		TipoCabeceraMensaje cabecera = mensaje.getCabeceraMensaje();
 		switch(SolicitudPortabilidad.fromType(cuerpo.getIdMensaje())){
-		
-		        
+				        
 		
 			case SP:
+				      List<TipoRangoNumeracion> rangos = cuerpo.getSolicitudPortabilidad().getNumeracionSolicitada().getRangoNumeracion();
+	    	          for(TipoRangoNumeracion rango:rangos){
+	    	        	  
+	    	        	  String numero=rango.getInicioRango();
+		    	          String tipoPortabilidad=rango.getTipoPortabilidadCedente();
+		    	          String cedente=cuerpo.getConsultaPrevia().getCodigoCedente();
+		    	          String receptor=cuerpo.getConsultaPrevia().getCodigoReceptor();
+		    	    	  BlacklistAbdcp rechazo = mensajeRechazoDao.getListanegra(null, SolicitudPortabilidad.SP.getValue(), numero);
+	    	        	  
+		    	    	     if(rechazo!=null){
+			    	             // se envia un mensa de rechazo
+			    	    		     
+			    	    		   MensajeRechazo msgrRechazo = mensajeRechazoDao.getMensajeRechazo(rechazo.getCodigoRechazo());
+			    	    		   
+			    	    		   // NI  O -// NE
+			    	    		   notificacionErrorController.enviarMensaje(msgrRechazo, receptor, mensaje);
+			    	    		   
+			    	    		   
+			    	    		  
+			    	    	  }else{
+			    	    		 // se envia un mensaje ANS
+			    	    		  // pregunamos si el  numero tine rechazo despues de enviar un mensaje ANCP
+			    	    		  String idSolicitud=mensajeDao.generarCodigo("00", Proceso.SP.getValue());
+			    	    		  mensajeController.enviarANS(mensaje,receptor,
+			    	    				  idSolicitud
+			    	    				  , rango.getInicioRango());
+			    	    		  
+			    	    		  BlacklistAbdcp rechazo2 = mensajeRechazoDao.getListanegra(SolicitudPortabilidad.ANS.getValue(),null, numero);
+			    	    		  // SI LO tienen  enviamos el mensaje CPRABD
+			    	    		  if(rechazo2!=null){		    	    			
+			    	    			  mensajeController.enviarRABDCP( idSolicitud,  receptor,
+			    	    					  rango.getInicioRango(), rechazo2.getCodigoRechazo(), null, null, 
+			    	    					  null, 
+			    	    					  null,
+			    	    					  null);
+			    	    			  
+			    	    		  }else {
+			    	    			  
+			    	    			  
+			    	    			      MensajeAbdcp consultaPreviaProcedente = mensajeDao.getMensajeAbdcpTipoNumeroDia(numero,LocalDate.now(),ConsultaPrevia.CPPR.getValue());
+			    	    			      
+			    	    			      if(consultaPreviaProcedente!=null){
+			    	    			    	  String fechaLimiteProgamacion =horarioController.getFechaLimiteProgamcionPortabilidad(cuerpo.getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());
+			    	    			    	  String fechaLiminteEjecucion=horarioController.getFechaLimiteEjecucionPortabilidad(cuerpo.getSolicitudPortabilidad().getCliente(), LocalDateTime.now());
+			    	    			    	  mensajeController.enviarCPSPR(idSolicitud, consultaPreviaProcedente.getIdSolicitud(), receptor, fechaLimiteProgamacion, fechaLiminteEjecucion);
+				    	    			      mensajeController.enviarCPSPR(idSolicitud, consultaPreviaProcedente.getIdSolicitud(), cedente, fechaLimiteProgamacion, fechaLiminteEjecucion);  
+			    	    			     
+			    	    			      }else{
+			    	    			    	  mensajeController.enviarECPC(mensaje, idSolicitud, cedente, numero,tipoPortabilidad);
+					    	    			  
+			    	    			      }
+			    	    			      
+			    	    			      
+			    	    			      
+			    	    			      
+			    	    			      
+			    	    			     
+			    	    			  
+			    	    			  
+			    	    		  } 
+			    	    			
+			    	    		 
+			    	    	  }
+			    	    	  
+		    	    	  
+		    	    	  
+		    	    	  
+	    	        	  
+	    	        	  
+	    	        	  
+	    	    	  
+	    	          }
+				
+				
 				break;
 			case ANS:
 				break;
-			case ESC:
+			case ESC:      Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getEnvioSolicitudCedente().getNumeracion(), cabecera.getDestinatario());
+					       if(cliente!=null){		    	        	 
+					        	 envioCedente(cabecera,cuerpo, cliente);
+					         }else{
+					        	 
+					        	 mensajeController.enviarOCC(
+					        			 cabecera.getDestinatario(),					        			 
+					        			 cabecera.getIdentificadorProceso(), 
+					        			 "REC01PRT05",
+					        			 null, 
+					        			 null,
+					        			 null, 
+					        			 null,
+					        			 null,
+					        			 cuerpo.getEnvioSolicitudCedente().getNumeracion()); 
+					         }
+				
+				
 				break;
 			case OCC:
 				break;
@@ -35,6 +161,8 @@ public class SolicitudPortabilidadController {
 			case APDC:
 				break;
 			case RABDCP:
+				         
+				
 				break;
 			case SPR:
 				break;
@@ -55,7 +183,107 @@ public class SolicitudPortabilidadController {
 		
 		
 		
-	}	
+	}
+	
+private void envioCedente(TipoCabeceraMensaje cabecera,TipoCuerpoMensaje cuerpo,Cliente cliente) throws Exception{
+		
+		if(cliente.getEstadoServicio().equals("02")) {
+			/*
+			String cedente			
+			,String idSolicitd 
+			,String causaObjecion
+			,String fechaActivacion
+			,String fechaTerminoContratoEquipo
+			,String fechaVencimiento
+			,String moneda
+			,String monto
+			,String numeracion
+			*/
+			
+			mensajeController.enviarOCC(cabecera.getDestinatario(), cabecera.getIdentificadorProceso()
+					, "REC01PRT01"
+					, fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd")
+					,fechaUtil.parseDateToString(cliente.getFechaTerminoContratoEquipo(), "yyyyMMdd") 
+					, null
+					, null
+					, null
+					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+			
+			return ;
+		}
+		
+		if(!cliente.getTipoServicio().equals(cuerpo.getEnvioSolicitudCedente().getTipoServicio())) {
+			mensajeController.enviarOCC(cabecera.getDestinatario(), cabecera.getIdentificadorProceso()
+					, "REC01PRT06"
+					, fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd")
+					,fechaUtil.parseDateToString(cliente.getFechaTerminoContratoEquipo(), "yyyyMMdd") 
+					, null
+					, null
+					, null
+					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+			
+			return ;
+			
+		}
+		
+		if(!cliente.getDocIdentidad().equals(cuerpo.getEnvioSolicitudCedente().getNumeroDocumentoIdentidad())) {
+			mensajeController.enviarOCC(cabecera.getDestinatario(), cabecera.getIdentificadorProceso()
+					, "REC01PRT07"
+					, null
+					, null 
+					, null
+					, null
+					, null
+					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+			
+			return ;
+			
+		}
+		
+		if(cliente.getMontoDeuda()>0D) {
+			mensajeController.enviarOCC(cabecera.getDestinatario()
+					, cabecera.getIdentificadorProceso()
+					, "REC01PRT09"
+					, fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd")
+					,fechaUtil.parseDateToString(cliente.getFechaTerminoContratoEquipo(), "yyyyMMdd") 
+					, fechaUtil.parseDateToString(cliente.getFechaVencimientoUltimaFactura(), "yyyyMMdd") 
+					, cliente.getMoneda()
+					, cliente.getMontoDeuda().toString()
+					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+			
+			return ;
+		}
+		
+		Long dias = ChronoUnit.DAYS.between(cliente.getFechaActivacion(), LocalDate.now());
+		if(dias <=30 ) {
+			mensajeController.enviarOCC(cabecera.getDestinatario(), cabecera.getIdentificadorProceso()
+					, "REC01PRT10"
+					, null
+					, null 
+					, null
+					, null
+					, null
+					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+			
+			return ;
+			
+			
+		}
+
+
+		String fechaLimiteProgamacion =horarioController.getFechaLimiteProgamcionPortabilidad(cuerpo.getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());
+  	    String fechaLiminteEjecucion=horarioController.getFechaLimiteEjecucionPortabilidad(cuerpo.getSolicitudPortabilidad().getCliente(), LocalDateTime.now());
+		mensajeController.enviarSPR(
+				cabecera.getIdentificadorProceso(),
+				cabecera.getDestinatario(),
+				fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd"),
+				fechaUtil.parseDateToString(cliente.getFechaTerminoContratoEquipo(), "yyyyMMdd"),
+				fechaLimiteProgamacion,
+				fechaLiminteEjecucion
+				
+				);
+		
+	}
 	
 	
 }

@@ -47,7 +47,7 @@ public class ConsultaPreviaController {
 	@Inject
 	NotificacionErrorController notificacionErrorController;
 	
-	public void ejecutarProceso(MensajeABDCP mensaje) throws Exception{
+	public void ejecutarProceso(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		TipoCuerpoMensaje cuerpo = mensaje.getCuerpoMensaje();	
 		TipoCabeceraMensaje cabecera = mensaje.getCabeceraMensaje();
 		switch(ConsultaPrevia.fromType(cuerpo.getIdMensaje())){

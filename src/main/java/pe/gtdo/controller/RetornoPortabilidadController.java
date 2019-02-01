@@ -30,7 +30,7 @@ public class RetornoPortabilidadController {
 	MensajeController mensajeController;
 	
 	
-	public void ejecutarProceso(MensajeABDCP mensaje) throws Exception{
+	public void ejecutarProceso(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		
 		
 		TipoCuerpoMensaje cuerpo = mensaje.getCuerpoMensaje();	

@@ -117,6 +117,8 @@ public  class FechaUtil {
     }
 	
 	public String parseDateTimeToString(LocalDateTime date,String formato) throws Exception{
+		
+		if(date==null) return null;
 		try{
 			this.formatter=DateTimeFormatter.ofPattern(formato);
 			return date.format(formatter);
@@ -126,6 +128,7 @@ public  class FechaUtil {
 	}
 	
 	public String parseDateToString(LocalDate date,String formato) throws Exception{
+		if(date==null) return null;
 		try{
 			this.formatter=DateTimeFormatter.ofPattern(formato);
 			return date.format(formatter);

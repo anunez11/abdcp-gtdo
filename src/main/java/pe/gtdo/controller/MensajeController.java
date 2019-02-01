@@ -48,6 +48,10 @@ public class MensajeController {
 	FechaUtil fechaUtil;
 	
 	@Inject
+	HorarioController horarioController;
+	
+	
+	@Inject
 	Utilitario utilitario;
 	
 	public void enviarNI(String destinatario,String causaNoIntegridad,MensajeABDCP mensaje) throws Exception{
@@ -321,7 +325,7 @@ public class MensajeController {
 		
 		String idSolicitud=mensaje.getCabeceraMensaje().getIdentificadorProceso();
 		String destinatario=mensaje.getCuerpoMensaje().getSolicitudRetorno().getCodigoReceptor();
-		
+		TipoSolicitudRetorno retorno = mensaje.getCuerpoMensaje().getSolicitudRetorno();
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
 		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
@@ -331,7 +335,7 @@ public class MensajeController {
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 		
 	    TipoAceptacionRetorno aceptacionRetorno= new TipoAceptacionRetorno();
-	    aceptacionRetorno.setFechaEjecucionRetorno(fechaUtil.parseDateTimeToString(LocalDateTime.now().plusDays(1), "yyyyMMddHHmmss"));
+	    aceptacionRetorno.setFechaEjecucionRetorno( retorno.getFechaEjecucionRetorno());
 	    builder.setAceptacionRetorno(aceptacionRetorno);
 	    builder.setCuerpoIdMensaje("AR");
 	    MensajeABDCP data = builder.build();

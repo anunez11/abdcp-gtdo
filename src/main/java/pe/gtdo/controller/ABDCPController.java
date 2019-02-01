@@ -48,6 +48,10 @@ public class ABDCPController {
 	RetornoPortabilidadController retornoPortabilidadController;
 	
 	
+	@Inject
+	SolicitudPortabilidadController solicitudPortabilidadController;
+	
+	
 	//private Boolean isMediador=false;
 	//private Integer consecionario=46;
 	
@@ -64,10 +68,11 @@ public class ABDCPController {
 			    
 			    mensajeDao.guardarMensaje(mensaje,xmlMsg ,"IN");			    
 			    if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
-				consultaPreviaController.ejecutarProceso(mensaje);
-				notificacionErrorController.ejecutarProceso(mensaje);
-				retornoPortabilidadController.ejecutarProceso(mensaje);
-			//	TimeUnit.SECONDS.sleep(10);
+				consultaPreviaController.ejecutarProceso(attachedDoc,mensaje);
+				notificacionErrorController.ejecutarProceso(attachedDoc,mensaje);
+				retornoPortabilidadController.ejecutarProceso(attachedDoc,mensaje);
+				solicitudPortabilidadController.ejecutarProceso(attachedDoc,mensaje);
+			
 			
 			
 		} catch (Exception e) {

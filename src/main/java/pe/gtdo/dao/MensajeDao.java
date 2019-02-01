@@ -1,6 +1,7 @@
 package pe.gtdo.dao;
 
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,4 +98,14 @@ public class MensajeDao extends TransactionDao {
 		if(lista.size()>0) return lista.get(0);
 		return null;
 	}
+	public MensajeAbdcp getMensajeAbdcpTipoNumeroDia(String numero,LocalDate dia,String tipo){
+		Map<String,Object> parameters=new HashMap<String,Object>();
+		parameters.put("numero",numero);
+		parameters.put("codigoMensaje",tipo);
+		parameters.put("dia",dia);	
+		List<MensajeAbdcp> lista = crudService.findWithQuery("select u from MensajeAbdcp u  where u.numero=:numero and date(fechaCreacion)=:dia  and u.codigoMensaje=:codigoMensaje ", parameters);
+		if(lista.size()>0) return lista.get(0);
+		return null;
+	}
+	
 }
