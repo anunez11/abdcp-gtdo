@@ -29,6 +29,12 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -154,6 +160,32 @@ public class Utilitario {
 	}
 	
 
+	public String converDocumentToString(Document doc){
+		
+		
+		
+		    String data=null;
+		    TransformerFactory tf = TransformerFactory.newInstance();
+		    try {
+	            Transformer transformer = tf.newTransformer();
+	            // below code to remove XML declaration
+	          //   transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	            StringWriter writer = new StringWriter();
+	            transformer.transform(new DOMSource(doc), new StreamResult(writer));
+	            String output = writer.getBuffer().toString();
+	            data= output;
+	          
+	            
+	            
+	        } catch (TransformerException e) {
+	            e.printStackTrace();
+	           
+	        }
+		    return data;
+		
+	}
+	
 	
 	
 }

@@ -8,6 +8,8 @@ import java.util.List;
 import javax.faces.bean.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.w3c.dom.Document;
+
 import pe.gtdo.dao.ClienteDao;
 import pe.gtdo.dao.MensajeDao;
 import pe.gtdo.dao.MensajeRechazoDao;
@@ -18,8 +20,11 @@ import pe.gtdo.entity.MensajeRechazo;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.tipo.TipoCabeceraMensaje;
 import pe.gtdo.tipo.TipoCuerpoMensaje;
+import pe.gtdo.tipo.TipoObjecionConcesionarioCedente;
 import pe.gtdo.tipo.TipoRangoNumeracion;
+import pe.gtdo.tipo.TipoSolicitudPortabilidad;
 import pe.gtdo.util.FechaUtil;
+import pe.gtdo.util.Utilitario;
 import pe.gtdo.util.constante.ConsultaPrevia;
 import pe.gtdo.util.constante.Proceso;
 import pe.gtdo.util.constante.SolicitudPortabilidad;
@@ -44,6 +49,10 @@ public class SolicitudPortabilidadController {
 	
 	@Inject
 	FechaUtil fechaUtil;
+	
+	@Inject
+	Utilitario utilitario;
+	
 	
 	@Inject
 	HorarioController horarioController;
@@ -153,15 +162,51 @@ public class SolicitudPortabilidadController {
 				
 				break;
 			case OCC:
+				          TipoObjecionConcesionarioCedente msgOCC = cuerpo.getConsultaPreviaObjecionConcesionarioCedente();
+	                      mensajeController.enviarRABDCP//(idSolicitud, destinatario, numeracion, causaRechazo, monto, moneda, fechaActivacion, fechaTerminoContratoEquipo, fechaVencimiento);
+	                      ( cabecera.getIdentificadorProceso(), "46",
+	                    		  msgOCC.getNumeracion(), msgOCC.getCausaObjecion(),
+	                    		  msgOCC.getMonto(), msgOCC.getMoneda(), msgOCC.getFechaActivacion(), 
+	                    		  msgOCC.getFechaTerminoContratoEquipo(), msgOCC.getFechaVencimiento());
+				
+				
+				
 				break;
-			case SAC:
+			case SAC:  //  se envia solicitud rpcedene para tosods para el emisor y e receptor				          
+						   MensajeAbdcp ansMsg = mensajeDao.getMensajeAbdcp(cabecera.getIdentificadorProceso(), SolicitudPortabilidad.ANS.getValue());
+						   String cedente=cabecera.getRemitente();
+						   String receptor= ansMsg.getDestino();
+						   String fechaLimiteProgamacion =horarioController.getFechaLimiteProgamcionPortabilidad(cuerpo.getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());
+	    			       String fechaLiminteEjecucion=horarioController.getFechaLimiteEjecucionPortabilidad(cuerpo.getSolicitudPortabilidad().getCliente(), LocalDateTime.now());
+						   mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), cedente, null, null, fechaLimiteProgamacion, fechaLiminteEjecucion);
+						   mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), receptor, null, null, fechaLimiteProgamacion, fechaLiminteEjecucion);
+						   
+				
+				
 				break;
-			case APD:
+			case APD:      MensajeAbdcp spMsg = mensajeDao.getMensajeAbdcp(cabecera.getIdentificadorProceso(), SolicitudPortabilidad.SP.getValue());
+                		   Document mensajeSp = spMsg.getRequest();
+                		   MensajeABDCP mesageAbdcp = utilitario.converXmlToObject(MensajeABDCP.class, utilitario.converDocumentToString(mensajeSp));
+                		   TipoSolicitudPortabilidad solictud = mesageAbdcp.getCuerpoMensaje().getSolicitudPortabilidad();
+                		   String receptorSP=solictud.getCodigoReceptor();
+                		   String cedenteSP=solictud.getCodigoCedente();                		   
+				           mensajeController.enviarAPDC(cedenteSP, mensaje, archivo);
+				           
+				          // String fechaLimiteProgamacion =horarioController.getFechaLimiteProgamcionPortabilidad(cuerpo.getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());
+	    			     //  String fechaLiminteEjecucion=horarioController.getFechaLimiteEjecucionPortabilidad(cuerpo.getSolicitudPortabilidad().getCliente(), LocalDateTime.now());
+						 //  mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), cedente, null, null, fechaLimiteProgamacion, fechaLiminteEjecucion);
+						 //  mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), receptor, null, null, fechaLimiteProgamacion, fechaLiminteEjecucion);
+					
+				           
+				             
 				break;
 			case APDC:
 				break;
-			case RABDCP:
+			case RABDCP:  
+				        // en el caso de ser receptor por ella deidata  
 				         
+				
+				
 				
 				break;
 			case SPR:
