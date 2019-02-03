@@ -98,6 +98,18 @@ public class MensajeDao extends TransactionDao {
 		if(lista.size()>0) return lista.get(0);
 		return null;
 	}
+	
+	
+	public MensajeAbdcp getMensajeAbdcp(String idSolicitud,List<String> tipo){
+		Map<String,Object> parameters=new HashMap<String,Object>();
+		parameters.put("idSolicitud",idSolicitud);
+		parameters.put("codigoMensaje",tipo);		
+		List<MensajeAbdcp> lista = crudService.findWithQuery("select u from MensajeAbdcp u  where u.idSolicitud=:idSolicitud and u.codigoMensaje in(:codigoMensaje) ", parameters);
+		if(lista.size()>0) return lista.get(0);
+		return null;
+	}
+	
+	
 	public MensajeAbdcp getMensajeAbdcpTipoNumeroDia(String numero,LocalDate dia,String tipo){
 		Map<String,Object> parameters=new HashMap<String,Object>();
 		parameters.put("numero",numero);

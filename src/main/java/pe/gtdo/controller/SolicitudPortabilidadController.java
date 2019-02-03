@@ -3,6 +3,7 @@ package pe.gtdo.controller;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ApplicationScoped;
@@ -192,34 +193,76 @@ public class SolicitudPortabilidadController {
                 		   String cedenteSP=solictud.getCodigoCedente();                		   
 				           mensajeController.enviarAPDC(cedenteSP, mensaje, archivo);
 				           
-				          // String fechaLimiteProgamacion =horarioController.getFechaLimiteProgamcionPortabilidad(cuerpo.getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());
-	    			     //  String fechaLiminteEjecucion=horarioController.getFechaLimiteEjecucionPortabilidad(cuerpo.getSolicitudPortabilidad().getCliente(), LocalDateTime.now());
-						 //  mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), cedente, null, null, fechaLimiteProgamacion, fechaLiminteEjecucion);
-						 //  mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), receptor, null, null, fechaLimiteProgamacion, fechaLiminteEjecucion);
+				           String fechaLimiteProgamacionAPD =horarioController.getFechaLimiteProgamcionPortabilidad(cuerpo.getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());
+	    			       String fechaLiminteEjecucionAPD=horarioController.getFechaLimiteEjecucionPortabilidad(cuerpo.getSolicitudPortabilidad().getCliente(), LocalDateTime.now());
+						   mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), cedenteSP, null, null, fechaLimiteProgamacionAPD, fechaLiminteEjecucionAPD);
+						   mensajeController.enviarSPR(cabecera.getIdentificadorProceso(), receptorSP, null, null, fechaLimiteProgamacionAPD, fechaLiminteEjecucionAPD);
 					
 				           
 				             
 				break;
-			case APDC:
+			case APDC: 
 				break;
 			case RABDCP:  
-				        // en el caso de ser receptor por ella deidata  
+				        // en el caso de se por deuda se registra la acreditacion de deuda ...
 				         
 				
 				
 				
 				break;
-			case SPR:
+			case SPR:  //  registar la programcion de portabilidad...  em el receptor
 				break;
-			case CPSPR:
+				
+				
+			case CPSPR: //  registar la programcion de portabilidad... en el receptor
 				break;
-			case CNPF:
+				
+			case CNPF:  //el abdcp en via este mesnaje cunado se a superado el tiempo para que el receptor envie su progamacion de portabilidad
 				break;
-			case PP:
+				
+				
+			case PP: //  aca hay dos posibilidades que se envie un mesaje FLEP o que se envie un mensaje  PEP 
+				        if(cabecera.getDestinatario().equals("00")){
+				           
+				        	 MensajeAbdcp ppSPMsg = mensajeDao.getMensajeAbdcp(cabecera.getIdentificadorProceso(), SolicitudPortabilidad.SP.getValue());
+				        	   MensajeABDCP mesageSPAbdcp = utilitario.converXmlToObject(MensajeABDCP.class, utilitario.converDocumentToString(ppSPMsg.getRequest()));
+	                		   TipoSolicitudPortabilidad solictudP = mesageSPAbdcp.getCuerpoMensaje().getSolicitudPortabilidad();
+	                		   String receptorppSP=solictudP.getCodigoReceptor();
+	                		   String cedenteppSP=solictudP.getCodigoCedente();                		   
+					     
+				        	
+				        	MensajeAbdcp ppMsg = mensajeDao.getMensajeAbdcp(cabecera.getIdentificadorProceso(), Arrays.asList(SolicitudPortabilidad.SPR.getValue(),SolicitudPortabilidad.CPSPR.getValue()));
+				            Document mensajePp = ppMsg.getRequest();
+	                	    MensajeABDCP mesagePPAbdcp = utilitario.converXmlToObject(MensajeABDCP.class, utilitario.converDocumentToString(mensajePp));
+	                	    
+	                	    String fechaLiminteProgramacionSP=fechaUtil.parseDateTimeToString(LocalDateTime.now(),"yyyyMMddHHmmss");
+	                	    String fechaLiminteEjecucionSP=fechaUtil.parseDateTimeToString(LocalDateTime.now(),"yyyyMMddHHmmss");
+	                	    
+	                	    if(ppMsg.getCodigoMensaje().equals(SolicitudPortabilidad.SPR)){
+	                	    	fechaLiminteEjecucionSP=mesagePPAbdcp.getCuerpoMensaje().getSolicitudProcedente().getFechaLimiteEjecucionPortabilidad();	
+	                	    	fechaLiminteProgramacionSP=mesagePPAbdcp.getCuerpoMensaje().getSolicitudProcedente().getFechaLimiteProgramacionPortabilidad();
+	                	    }
+	                	    if(ppMsg.getCodigoMensaje().equals(SolicitudPortabilidad.CPSPR)){
+	                	    	fechaLiminteEjecucionSP= mesagePPAbdcp.getCuerpoMensaje().getSolicitudProcedenteConsultaPreviaProcedente().getFechaLimiteEjecucionPortabilidad();
+	                	    	fechaLiminteProgramacionSP=mesagePPAbdcp.getCuerpoMensaje().getSolicitudProcedenteConsultaPreviaProcedente().getFechaLimiteProgramacionPortabilidad();
+	                	    }	                	    
+	                	   
+	                	    
+	                	   //if( fechaUtil.parseStringToLocalDateTime(fechaLiminteProgramacionSP, "yyyyMMddHHmmss"))
+	                	    if(ChronoUnit.SECONDS.between(fechaUtil.parseStringToLocalDateTime(fechaLiminteProgramacionSP, "yyyyMMddHHmmss"), LocalDateTime.now())>0L){
+	                	    	String fechaLiminteEjecucionPP=cuerpo.getProgramacionPortabilidad().getFechaEjecucionPortabilidad();	                	   
+		                	    mensajeController.enviarPEP(cabecera.getIdentificadorProceso(), receptorppSP, fechaLiminteEjecucionPP);
+		                	    mensajeController.enviarPEP(cabecera.getIdentificadorProceso(), cedenteppSP , fechaLiminteEjecucionPP);
+		                	    	
+	                	    }else{
+	                	    	mensajeController.enviarFLEP(cabecera.getIdentificadorProceso(), receptorppSP, fechaLiminteProgramacionSP, fechaLiminteEjecucionSP);	
+	                	    }
+				        }
 				break;
-			case FLEP:
+			case FLEP:  //  este mensaje se da c undo se a recibido una programcion de portabilidad fuera de limite 
+				
 				break;
-			case PEP:
+			case PEP:   //  este mensaje se da cundo recibe la programcion de portabilidad ...
 				break;
 		
 		
