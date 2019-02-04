@@ -205,16 +205,20 @@ public class SolicitudPortabilidadController {
 				break;
 			case RABDCP:  
 				        // en el caso de se por deuda se registra la acreditacion de deuda ...
-				         
+				                
+				
+				
 				
 				
 				
 				break;
 			case SPR:  //  registar la programcion de portabilidad...  em el receptor
+				        
 				break;
 				
 				
 			case CPSPR: //  registar la programcion de portabilidad... en el receptor
+				        
 				break;
 				
 			case CNPF:  //el abdcp en via este mesnaje cunado se a superado el tiempo para que el receptor envie su progamacion de portabilidad

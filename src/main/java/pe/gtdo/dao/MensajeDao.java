@@ -2,21 +2,38 @@ package pe.gtdo.dao;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
 
+
+
+
+
+
+
+
+
+
+import pe.gtdo.controller.HorarioController;
+import pe.gtdo.entity.AcreditacionPago;
 import pe.gtdo.entity.MensajeAbdcp;
+import pe.gtdo.entity.ProgramacionPortabilidad;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.tipo.TipoCabeceraMensaje;
 import pe.gtdo.tipo.TipoCuerpoMensaje;
+import pe.gtdo.tipo.TipoRechazadaABDCP;
+import pe.gtdo.tipo.TipoSolicitudProcedente;
+import pe.gtdo.util.FechaUtil;
 import pe.gtdo.util.constante.ConsultaPrevia;
 import pe.gtdo.util.constante.NotificacionError;
 import pe.gtdo.util.constante.Proceso;
@@ -27,7 +44,11 @@ import pe.gtdo.util.constante.SolicitudPortabilidad;
 public class MensajeDao extends TransactionDao {
    
 	
-	public String generarCodigo(String concesionario,String tipoProceso){
+	   @Inject
+	   HorarioController horario;
+	   @Inject
+		FechaUtil fechaUtil;
+    	public String generarCodigo(String concesionario,String tipoProceso){
 		
 		// 00 IDmENSAGE
 		// 
@@ -119,5 +140,34 @@ public class MensajeDao extends TransactionDao {
 		if(lista.size()>0) return lista.get(0);
 		return null;
 	}
+	
+	
+	public void crearAcredcitacion(MensajeABDCP mensaje) throws Exception{
+		TipoRechazadaABDCP rechazo = mensaje.getCuerpoMensaje().getRechazadaABDCP();
+		AcreditacionPago acreditacion= new AcreditacionPago();
+		acreditacion.setNumero(rechazo.getNumeracion());
+		acreditacion.setMoneda(rechazo.getMoneda());
+		MensajeAbdcp mesnsajeANS = getMensajeAbdcp(mensaje.getCabeceraMensaje().getIdentificadorProceso(),SolicitudPortabilidad.ANS.getValue());
+		MensajeAbdcp mesnsajeSP =  getMensajeAbdcp(mesnsajeANS.getIdProceso(),SolicitudPortabilidad.SP.getValue());
+		MensajeABDCP sp=utilitario.converXmlToObject(MensajeABDCP.class, utilitario.converDocumentToString(mesnsajeSP.getRequest())) ;
+		String fechaLimiteEnvio = horario.getFechaLimiteAcreditacionPago(sp.getCuerpoMensaje().getSolicitudPortabilidad().getTipoServicio(), LocalDateTime.now());		
+		acreditacion.setFechaLimiteEnvio(fechaUtil.parseStringToLocalDateTime(fechaLimiteEnvio, "yyyyMMddHHmmss"));
+		acreditacion.setMonto(Double.valueOf(rechazo.getMonto()));
+		create(acreditacion);
+		
+		
+	}
+	
+	public void crearProgramacion(TipoSolicitudProcedente procedente,String numero) throws Exception{
+		LocalDateTime fechaLimiteEnvio=fechaUtil.parseStringToLocalDateTime(procedente.getFechaLimiteProgramacionPortabilidad(),"yyyyMMddHHmmss");
+		LocalDateTime fechaLimiteEjecucion=fechaUtil.parseStringToLocalDateTime(procedente.getFechaLimiteEjecucionPortabilidad(),"yyyyMMddHHmmss");
+		ProgramacionPortabilidad programacion= new ProgramacionPortabilidad();
+		programacion.setNumero(numero);
+		programacion.setFechaLimiteEjecucion(fechaLimiteEjecucion);
+		programacion.setFechaLimiteEnvio(fechaLimiteEnvio);
+		create(programacion);
+	}
+	
+
 	
 }
