@@ -12,7 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
-import pe.gtdo.entity.MensageAbdcp;
+
 import pe.gtdo.entity.MensajeAbdcp;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.tipo.TipoCabeceraMensaje;

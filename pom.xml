@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	  <groupId>pe.gtdo</groupId>
-    <artifactId>abdcp</artifactId>
+    <artifactId>abdcp-soap-servere</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<properties>
@@ -182,7 +182,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>abdcp-${stage.project}</finalName>
+		<finalName>abdcp-sop-sever-${stage.project}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -46,13 +47,16 @@ import org.json.JSONObject;
 import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 
+import pe.gtdo.util.constante.ServicioExterno;
+
 
 @ApplicationScoped
 public class Utilitario {
     	
+  @Inject
+  ServicioExterno servicioExterno;
 
-
-	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
+//	private String XSD_FILE="C:\\Users\\Angel A\\Documents\\WS\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
 //	private String XSD_FILE="D:\\ANGEL\\PROYECTOS\\DESARROLLO\\JAVA_CFE\\abdcp-gtdo\\src\\main\\webapp\\WEB-INF\\xsd\\elementoMsg.xsd";
 	
 	public  Document stringToXml(String xmlString) throws ParserConfigurationException, SAXException, IOException{
@@ -97,7 +101,7 @@ public class Utilitario {
 	    	
 	            SchemaFactory factory = 
 	                    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-	            Schema schema = factory.newSchema(new File(XSD_FILE));
+	            Schema schema = factory.newSchema(new File(servicioExterno.getValidacionXSD()));
 	            Validator validator = schema.newValidator();
 	            validator.validate(new StreamSource(new ByteArrayInputStream(xmslMsg.getBytes("UTF-8")) ));
 	        } catch (IOException | SAXException e) {

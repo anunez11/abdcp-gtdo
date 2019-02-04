@@ -5,30 +5,71 @@ import javax.inject.Inject;
 
 import pe.gtdo.core.configuration.*;
 
-
-
-
 @ApplicationScoped
 public class ServicioExterno {
 
+	@Inject @StageDependent
+	private String operador;
+
 	
 	@Inject @StageDependent
-	private String servicioCatalogo;
-
+	private String wsdlAbdcp;
+	
 	
 	@Inject @StageDependent
-	private String servicioCarpeta;
+	private String endPointAbdcp;
 	
 	
+	@Inject @StageDependent
+	private String serviceNameAbdcp;
 	
-	public String getServicioCatalogo() {
-		return servicioCatalogo;
+	@Inject @StageDependent
+	private String targetNameAbdcp;
+	
+	
+	@Inject @StageDependent
+	private String usuario;
+	
+	@Inject @StageDependent
+	private String clave;
+	
+	
+	@Inject @StageDependent
+	private String validacionXSD;
+
+	public String getOperador() {
+		return operador;
 	}
 
-
-	public String getServicioCarpeta() {
-		return servicioCarpeta;
+	public String getWsdlAbdcp() {
+		return wsdlAbdcp;
 	}
+
+	public String getEndPointAbdcp() {
+		return endPointAbdcp;
+	}
+
+	public String getServiceNameAbdcp() {
+		return serviceNameAbdcp;
+	}
+
+	public String getTargetNameAbdcp() {
+		return targetNameAbdcp;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public String getClave() {
+		return clave;
+	}
+
+	public String getValidacionXSD() {
+		return validacionXSD;
+	}
+	
+	
 	
 	
 	

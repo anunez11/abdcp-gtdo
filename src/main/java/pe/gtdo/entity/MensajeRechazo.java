@@ -43,7 +43,11 @@ public class MensajeRechazo {
 	
 	@Column(name="mensaje_rechazado")
 	@Type(type = "ListStringUserType")
-	private List<String> participante_rechaza;
+	private List<String> mensajeRechazado;
+	
+	
+	@Column(name="participante_rechaza")	
+	private String participanteRechaza;
 
 	@Column(name="es_activo")
 	private Boolean esActivo;
@@ -82,12 +86,22 @@ public class MensajeRechazo {
 
 
 
-	public List<String> getParticipante_rechaza() {
-		return participante_rechaza;
+
+
+	public List<String> getMensajeRechazado() {
+		return mensajeRechazado;
 	}
 
-	public void setParticipante_rechaza(List<String> participante_rechaza) {
-		this.participante_rechaza = participante_rechaza;
+	public void setMensajeRechazado(List<String> mensajeRechazado) {
+		this.mensajeRechazado = mensajeRechazado;
+	}
+
+	public String getParticipanteRechaza() {
+		return participanteRechaza;
+	}
+
+	public void setParticipanteRechaza(String participanteRechaza) {
+		this.participanteRechaza = participanteRechaza;
 	}
 
 	public Boolean getEsActivo() {

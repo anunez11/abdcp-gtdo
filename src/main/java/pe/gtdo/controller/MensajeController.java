@@ -1,16 +1,15 @@
 package pe.gtdo.controller;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
+
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.xml.bind.JAXBException;
+
 
 import pe.gtdo.cliente.ClienteSoap;
 import pe.gtdo.dao.MensajeDao;
-import pe.gtdo.entity.MensageAbdcp;
-import pe.gtdo.exception.AbdcpException;
+
 import pe.gtdo.msg.Builder;
 import pe.gtdo.soap.ReceiveMessageResponse;
 import pe.gtdo.tipo.MensajeABDCP;
@@ -36,6 +35,7 @@ import pe.gtdo.tipo.TipoSolicitudRetorno;
 import pe.gtdo.util.FechaUtil;
 import pe.gtdo.util.Utilitario;
 import pe.gtdo.util.constante.Proceso;
+import pe.gtdo.util.constante.ServicioExterno;
 
 
 @ApplicationScoped
@@ -53,6 +53,11 @@ public class MensajeController {
 	
 	@Inject
 	Utilitario utilitario;
+	
+	
+	@Inject
+	ServicioExterno servicioExteno;
+	
 	
 	public void enviarNI(String destinatario,String causaNoIntegridad,MensajeABDCP mensaje) throws Exception{
 		
@@ -683,10 +688,10 @@ public class MensajeController {
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		String fechaLiminte = fechaUtil.parseDateTimeToString(LocalDateTime.now().plusHours(22), "yyyyMMddHHmmss");	
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(receptor, Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
-	    builder.setCabeceraDestinatario(receptor);	    
+	    builder.setCabeceraRemitente(receptor);
+	    builder.setCabeceraDestinatario("00");	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
 	    TipoProgramacionPortabilidad programacion = new TipoProgramacionPortabilidad();
@@ -751,10 +756,12 @@ public class MensajeController {
 		ClienteSoap soap= new ClienteSoap();
 		mensajeDao.guardarMensaje(mensaje,msg, "OUT");
 		
-		soap.setConfig("http://localhost:8080/Portaflow/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Portaflow/services/ABDCPWebService");
-		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo, "", "", msg);
-		
-	//	TimeUnit.SECONDS.sleep(5);
+		soap.setConfig(servicioExteno.getWsdlAbdcp(), 
+				servicioExteno.getTargetNameAbdcp(),
+				servicioExteno.getServiceNameAbdcp(), 
+				servicioExteno.getEndPointAbdcp());
+		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo,servicioExteno.getClave(),servicioExteno.getUsuario(), msg);
+
 		
 	}
 	
