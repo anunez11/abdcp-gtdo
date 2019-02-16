@@ -12,6 +12,12 @@ public class ServicioExterno {
 	private String operador;
 
 	
+
+	@Inject @StageDependent
+	private String abdcp;
+
+
+
 	@Inject @StageDependent
 	private String wsdlAbdcp;
 	
@@ -70,6 +76,10 @@ public class ServicioExterno {
 	}
 	
 	
+	
+	public String getAbdcp() {
+		return abdcp;
+	}
 	
 	
 	

@@ -102,6 +102,7 @@ public class MensajeDao extends TransactionDao {
 		   data.setIdMensaje(cabecera.getIdentificadorMensaje());
 		   data.setIdProceso(cabecera.getIdentificadorProceso());
 		   data.setIdSolicitud(idSolicitud);
+		   data.setProceso(proceso);
 		   data.setNumero(numero);		   DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		   Document document = db.parse(new ByteArrayInputStream(msg.getBytes("UTF-8")));		   
 		   data.setRequest(document);

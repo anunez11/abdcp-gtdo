@@ -62,9 +62,9 @@ public class MensajeController {
 	public void enviarNI(String destinatario,String causaNoIntegridad,MensajeABDCP mensaje) throws Exception{
 		
 		Builder builder=new Builder();
-	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
-	    builder.setCabeceraIdentificadorProceso(mensajeDao.generarCodigo("00", Proceso.DE.getValue()));
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.DE.getValue()));
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);
 	    builder.setCabeceraFechaCreacionMensaje(fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss"));
 	    
@@ -81,9 +81,9 @@ public class MensajeController {
 	public void enviarNE(String destinatario,String codigo,String descripcionCodigoError,MensajeABDCP mensaje) throws Exception{
 		
 		Builder builder=new Builder();
-	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
-	    builder.setCabeceraIdentificadorProceso(mensajeDao.generarCodigo("00", Proceso.DE.getValue()));
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorProceso(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.DE.getValue()));
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);
 	    builder.setCabeceraFechaCreacionMensaje(fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss"));	    
 	    TipoNotificacionError notificacionError=new TipoNotificacionError();
@@ -99,9 +99,9 @@ public class MensajeController {
 		
 		 String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		 Builder builder=new Builder();	    
-		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));
+		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));
 		 builder.setCabeceraIdentificadorProceso(mensaje.getCabeceraMensaje().getIdentificadorProceso());
-		 builder.setCabeceraRemitente("00");
+		 builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 		 builder.setCabeceraDestinatario(destinatario);
 		 builder.setCabeceraFechaCreacionMensaje(fecha);
 		 
@@ -131,9 +131,9 @@ public class MensajeController {
  			
  			) throws Exception{
 		Builder builder=new Builder();
-	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitd);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss"));	    
 	    TipoRechazadaABDCP  consultaPreviaRechazadaABDCP= new TipoRechazadaABDCP();
@@ -164,9 +164,9 @@ public class MensajeController {
  			) throws Exception{
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		Builder builder=new Builder();
-	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitd);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
@@ -251,7 +251,7 @@ public class MensajeController {
 		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(cedente, Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
 	    builder.setCabeceraRemitente(cedente);
-	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraDestinatario(servicioExteno.getAbdcp());	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
 	    TipoSolicitudAceptadaCedente  consultaPreviaAceptadaCedente=new TipoSolicitudAceptadaCedente();
@@ -273,9 +273,9 @@ public class MensajeController {
 
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
@@ -301,9 +301,9 @@ public class MensajeController {
 		
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);
 	    
@@ -323,7 +323,6 @@ public class MensajeController {
 	    MensajeABDCP dato = builder.build();
 	    enviar(null,dato);
 	    
-	    
 		
 	}
 	public void enviarAR(MensajeABDCP mensaje) throws Exception{
@@ -333,9 +332,9 @@ public class MensajeController {
 		TipoSolicitudRetorno retorno = mensaje.getCuerpoMensaje().getSolicitudRetorno();
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 		
@@ -355,9 +354,9 @@ public class MensajeController {
 		
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 		
@@ -374,9 +373,9 @@ public class MensajeController {
 		
 		 String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		 Builder builder=new Builder();	    
-		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));
+		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));
 		 builder.setCabeceraIdentificadorProceso(mensaje.getCabeceraMensaje().getIdentificadorProceso());
-		 builder.setCabeceraRemitente("00");
+		 builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 		 builder.setCabeceraDestinatario(destinatario);
 		 builder.setCabeceraFechaCreacionMensaje(fecha);
 		 
@@ -407,9 +406,9 @@ public class MensajeController {
 		 String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		
 		 Builder builder=new Builder();	    
-		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));
+		 builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));
 		 builder.setCabeceraIdentificadorProceso(idSolicitud);
-		 builder.setCabeceraRemitente("00");
+		 builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 		 builder.setCabeceraDestinatario(destinatario);
 		 builder.setCabeceraFechaCreacionMensaje(fecha);
 		
@@ -436,9 +435,9 @@ public class MensajeController {
  			) throws Exception{
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		Builder builder=new Builder();
-	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+	    builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitd);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
@@ -504,9 +503,9 @@ public class MensajeController {
 
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
@@ -533,9 +532,9 @@ public class MensajeController {
 
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
@@ -567,7 +566,7 @@ public class MensajeController {
 		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(cedente, Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitd);
 	    builder.setCabeceraRemitente(cedente);
-	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraDestinatario(servicioExteno.getAbdcp());	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 		
 	    TipoObjecionConcesionarioCedente solicitudObjecionConcesionarioCedente= new TipoObjecionConcesionarioCedente();
@@ -606,7 +605,7 @@ public class MensajeController {
 		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(receptor, Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitd);
 	    builder.setCabeceraRemitente(receptor);
-	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraDestinatario(servicioExteno.getAbdcp());	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 		
 	    TipoAcreditacionPagoDeuda acreditacionPagoDeuda= new TipoAcreditacionPagoDeuda();
@@ -635,9 +634,9 @@ public class MensajeController {
 		TipoAcreditacionPagoDeuda deuda=cuerpo.getAcreditacionPagoDeuda();
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");		
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(cabecera.getIdentificadorProceso());
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(cedente);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 		
@@ -665,9 +664,9 @@ public class MensajeController {
 		Builder builder=new Builder();
 		String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 		String fechaLiminte = fechaUtil.parseDateTimeToString(LocalDateTime.now().plusHours(22), "yyyyMMddHHmmss");	
-		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
-	    builder.setCabeceraRemitente("00");
+	    builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 	    builder.setCabeceraDestinatario(destinatario);	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
@@ -691,7 +690,7 @@ public class MensajeController {
 		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(receptor, Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
 	    builder.setCabeceraRemitente(receptor);
-	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraDestinatario(servicioExteno.getAbdcp());	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
 	    TipoProgramacionPortabilidad programacion = new TipoProgramacionPortabilidad();
@@ -713,9 +712,9 @@ public class MensajeController {
 			Builder builder=new Builder();
 			String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");
 			String fechaLiminte = fechaUtil.parseDateTimeToString(LocalDateTime.now().plusHours(22), "yyyyMMddHHmmss");	
-			builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+			builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 			builder.setCabeceraIdentificadorProceso(idSolicitud);
-			builder.setCabeceraRemitente("00");
+			builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 			builder.setCabeceraDestinatario(receptor);	    
 			builder.setCabeceraFechaCreacionMensaje(fecha);	
 			
@@ -737,9 +736,9 @@ public class MensajeController {
 
 			Builder builder=new Builder();
 			String fecha = fechaUtil.parseDateTimeToString(LocalDateTime.now(), "yyyyMMddHHmmss");			
-			builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo("00", Proceso.SP.getValue()));	    
+			builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(servicioExteno.getAbdcp(), Proceso.SP.getValue()));	    
 			builder.setCabeceraIdentificadorProceso(idSolicitud);
-			builder.setCabeceraRemitente("00");
+			builder.setCabeceraRemitente(servicioExteno.getAbdcp());
 			builder.setCabeceraDestinatario(destinatario);	    
 			builder.setCabeceraFechaCreacionMensaje(fecha);				
 			TipoProgramadaEjecutarPortabilidad programacion = new TipoProgramadaEjecutarPortabilidad();
@@ -763,6 +762,11 @@ public class MensajeController {
 		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo,servicioExteno.getClave(),servicioExteno.getUsuario(), msg);
 
 		
+		System.out.println("==================================================================");
+		System.out.println("===> RESPONSE "+respuesta.getResponse());
+		System.out.println("==================================================================");
+	
+	 
 	}
 	
 
