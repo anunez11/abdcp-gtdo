@@ -55,7 +55,12 @@ public class MensajeDao extends TransactionDao {
 		
 		Map<String,Object> parameters=new HashMap<String,Object>();
 		parameters.put("concesionario",concesionario);
-		parameters.put("tipoProceso",tipoProceso);		
+		parameters.put("tipoProceso",tipoProceso);	
+		
+		System.out.println("===================================================================>");
+		System.out.println("=====================>" +parameters.toString());
+		System.out.println("===================================================================>");
+		
 		List<String> lista = crudService.findWithNativeQuery("select abdcp_stored_codigo(:concesionario,:tipoProceso);", parameters);
 		return lista.get(0);
 	}

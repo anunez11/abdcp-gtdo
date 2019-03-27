@@ -182,7 +182,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>abdcp-sop-sever-${stage.project}</finalName>
+		<finalName>abdcp-sop-sever-prod-${stage.project}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

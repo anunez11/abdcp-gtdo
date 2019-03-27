@@ -66,13 +66,16 @@ public class SolicitudPortabilidadController {
 				        
 		
 			case SP:
+			      System.out.println("=================================================================>");
+			      System.out.println(" SP =================>"+cuerpo.getSolicitudPortabilidad());
+			      System.out.println("=================================================================>");
 				      List<TipoRangoNumeracion> rangos = cuerpo.getSolicitudPortabilidad().getNumeracionSolicitada().getRangoNumeracion();
 	    	          for(TipoRangoNumeracion rango:rangos){
 	    	        	  
 	    	        	  String numero=rango.getInicioRango();
 		    	          String tipoPortabilidad=rango.getTipoPortabilidadCedente();
-		    	          String cedente=cuerpo.getConsultaPrevia().getCodigoCedente();
-		    	          String receptor=cuerpo.getConsultaPrevia().getCodigoReceptor();
+		    	          String cedente=cuerpo.getSolicitudPortabilidad().getCodigoCedente();
+		    	          String receptor=cuerpo.getSolicitudPortabilidad().getCodigoReceptor();
 		    	    	  BlacklistAbdcp rechazo = mensajeRechazoDao.getListanegra(null, SolicitudPortabilidad.SP.getValue(), numero);
 	    	        	  
 		    	    	     if(rechazo!=null){
@@ -143,7 +146,7 @@ public class SolicitudPortabilidadController {
 				break;
 			case ANS:
 				break;
-			case ESC:      Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getEnvioSolicitudCedente().getNumeracion(), cabecera.getDestinatario());
+			case ESC:     /* Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getEnvioSolicitudCedente().getNumeracion(), cabecera.getDestinatario());
 					       if(cliente!=null){		    	        	 
 					        	 envioCedente(cabecera,cuerpo, cliente);
 					         }else{
@@ -158,7 +161,7 @@ public class SolicitudPortabilidadController {
 					        			 null,
 					        			 null,
 					        			 cuerpo.getEnvioSolicitudCedente().getNumeracion()); 
-					         }
+					         }*/
 				
 				
 				break;

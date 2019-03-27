@@ -83,7 +83,7 @@ public class Utilitario {
 		
 		 JAXBContext jaxbContext = JAXBContext.newInstance(t.getClass());
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+      //  jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         StringWriter sw = new StringWriter();
         jaxbMarshaller.marshal(t, sw);

@@ -101,12 +101,12 @@ public class ConsultaPreviaController {
 		    
 		    case ECPC : // aca hay dos posiblidades  o enviar una cosnulta proceden o inprocendente 
 		    	        // buscamos el cliente  
-		    	         Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getEnvioSolicitudCedente().getNumeracion(), cabecera.getDestinatario());
+		    	         Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getConsultaPreviaEnvioCedente().getNumeracion(), cabecera.getDestinatario());
 		    	         if(cliente!=null){		    	        	 
-		    	        	 envioCedente(cabecera,cuerpo, cliente);
+		    	        	// envioCedente(cabecera,cuerpo, cliente);
 		    	         }else{
 		    	        	 
-		    	        	 mensajeController.enviarCPOCC(
+		    	        	/* mensajeController.enviarCPOCC(
 		    	        			 cabecera.getDestinatario(), 
 		    	        			 "00",
 		    	        			 cabecera.getIdentificadorProceso(), 
@@ -116,7 +116,7 @@ public class ConsultaPreviaController {
 		    	        			 null, 
 		    	        			 null,
 		    	        			 null,
-		    	        			 cuerpo.getEnvioSolicitudCedente().getNumeracion()); 
+		    	        			 cuerpo.getConsultaPreviaEnvioCedente().getNumeracion()); */
 		    	         }
 		    	          
 		    break ;
@@ -150,12 +150,12 @@ public class ConsultaPreviaController {
 					, null
 					, null
 					, null
-					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+					, cuerpo.getConsultaPreviaEnvioCedente().getNumeracion());
 			
 			return ;
 		}
 		
-		if(!cliente.getTipoServicio().equals(cuerpo.getEnvioSolicitudCedente().getTipoServicio())) {
+		if(!cliente.getTipoServicio().equals(cuerpo.getConsultaPreviaEnvioCedente().getTipoServicio())) {
 			mensajeController.enviarCPOCC(cabecera.getDestinatario(), "00", cabecera.getIdentificadorProceso()
 					, "REC01PRT06"
 					, fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd")
@@ -163,13 +163,13 @@ public class ConsultaPreviaController {
 					, null
 					, null
 					, null
-					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+					, cuerpo.getConsultaPreviaEnvioCedente().getNumeracion());
 			
 			return ;
 			
 		}
 		
-		if(!cliente.getDocIdentidad().equals(cuerpo.getEnvioSolicitudCedente().getNumeroDocumentoIdentidad())) {
+		if(!cliente.getDocIdentidad().equals(cuerpo.getConsultaPreviaEnvioCedente().getNumeroDocumentoIdentidad())) {
 			mensajeController.enviarCPOCC(cabecera.getDestinatario(), "00", cabecera.getIdentificadorProceso()
 					, "REC01PRT07"
 					, null
@@ -191,15 +191,15 @@ public class ConsultaPreviaController {
 					, fechaUtil.parseDateToString(cliente.getFechaVencimientoUltimaFactura(), "yyyyMMdd") 
 					, cliente.getMoneda()
 					, cliente.getMontoDeuda().toString()
-					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+					, cuerpo.getConsultaPreviaEnvioCedente().getNumeracion());
 			
 			return ;
 		}
 		
-		
-		mensajeController.enviarCPPR(cabecera.getDestinatario(), "00",
+		mensajeController.enviarCPAC(cabecera.getDestinatario(), cabecera.getIdentificadorProceso(), 
 				fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd"),
-				fechaUtil.parseDateToString(cliente.getFechaTerminoContratoEquipo(), "yyyyMMdd") );
+				fechaUtil.parseDateToString(cliente.getFechaTerminoContratoEquipo(), "yyyyMMdd"), " Prueba ");
+	
 		
 	}
 	

@@ -174,6 +174,7 @@ public class MensajeController {
 	    TipoEnvioSolicitudCedente envioSolicitudCedente= new TipoEnvioSolicitudCedente();
 	    
 	    TipoSolicitudPortabilidad consulta = mensajeCP.getCuerpoMensaje().getConsultaPrevia();
+	    if(consulta==null) consulta = mensajeCP.getCuerpoMensaje().getSolicitudPortabilidad();
 	    envioSolicitudCedente.setCliente(consulta.getCliente());
 	    envioSolicitudCedente.setCodigoCedente(consulta.getCodigoCedente());
 	    envioSolicitudCedente.setCodigoReceptor(consulta.getCodigoReceptor());
