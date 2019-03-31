@@ -103,10 +103,10 @@ public class ConsultaPreviaController {
 		    	        // buscamos el cliente  
 		    	         Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getConsultaPreviaEnvioCedente().getNumeracion(), cabecera.getDestinatario());
 		    	         if(cliente!=null){		    	        	 
-		    	        	// envioCedente(cabecera,cuerpo, cliente);
+		    	        	 envioCedente(cabecera,cuerpo, cliente);
 		    	         }else{
 		    	        	 
-		    	        	/* mensajeController.enviarCPOCC(
+		    	        	 mensajeController.enviarCPOCC(
 		    	        			 cabecera.getDestinatario(), 
 		    	        			 "00",
 		    	        			 cabecera.getIdentificadorProceso(), 
@@ -116,7 +116,7 @@ public class ConsultaPreviaController {
 		    	        			 null, 
 		    	        			 null,
 		    	        			 null,
-		    	        			 cuerpo.getConsultaPreviaEnvioCedente().getNumeracion()); */
+		    	        			 cuerpo.getConsultaPreviaEnvioCedente().getNumeracion()); 
 		    	         }
 		    	          
 		    break ;

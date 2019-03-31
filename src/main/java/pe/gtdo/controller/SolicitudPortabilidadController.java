@@ -14,16 +14,20 @@ import org.w3c.dom.Document;
 import pe.gtdo.dao.ClienteDao;
 import pe.gtdo.dao.MensajeDao;
 import pe.gtdo.dao.MensajeRechazoDao;
+import pe.gtdo.entity.AcreditacionPago;
 import pe.gtdo.entity.BlacklistAbdcp;
 import pe.gtdo.entity.Cliente;
 import pe.gtdo.entity.MensajeAbdcp;
 import pe.gtdo.entity.MensajeRechazo;
+import pe.gtdo.entity.ProgramacionPortabilidad;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.tipo.TipoCabeceraMensaje;
 import pe.gtdo.tipo.TipoCuerpoMensaje;
 import pe.gtdo.tipo.TipoObjecionConcesionarioCedente;
 import pe.gtdo.tipo.TipoRangoNumeracion;
+import pe.gtdo.tipo.TipoRechazadaABDCP;
 import pe.gtdo.tipo.TipoSolicitudPortabilidad;
+import pe.gtdo.tipo.TipoSolicitudProcedente;
 import pe.gtdo.util.FechaUtil;
 import pe.gtdo.util.Utilitario;
 import pe.gtdo.util.constante.ConsultaPrevia;
@@ -146,7 +150,7 @@ public class SolicitudPortabilidadController {
 				break;
 			case ANS:
 				break;
-			case ESC:     /* Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getEnvioSolicitudCedente().getNumeracion(), cabecera.getDestinatario());
+			case ESC:      Cliente cliente = clienteDao.getClienteByNumero(cuerpo.getEnvioSolicitudCedente().getNumeracion(), cabecera.getDestinatario());
 					       if(cliente!=null){		    	        	 
 					        	 envioCedente(cabecera,cuerpo, cliente);
 					         }else{
@@ -161,7 +165,7 @@ public class SolicitudPortabilidadController {
 					        			 null,
 					        			 null,
 					        			 cuerpo.getEnvioSolicitudCedente().getNumeracion()); 
-					         }*/
+					         }
 				
 				
 				break;
@@ -208,19 +212,45 @@ public class SolicitudPortabilidadController {
 				break;
 			case RABDCP:  
 				        // en el caso de se por deuda se registra la acreditacion de deuda ...
-				                
-				
-				
-				
+				         
+				         TipoRechazadaABDCP rechazo = cuerpo.getRechazadaABDCP();
+				         if(rechazo.getCausaRechazo().equals("REC01PRT09")){				        	 
+				            /* rechazo.getFechaActivacion();
+					         rechazo.getFechaTerminoContratoEquipo();
+					         rechazo.getFechaVencimiento();*/					     					         
+					         AcreditacionPago  acreditacion= new AcreditacionPago();
+					         acreditacion.setIdProceso( rechazo.getIdentificacionSolicitud());
+					         acreditacion.setMoneda(rechazo.getMoneda());
+					         acreditacion.setNumero( rechazo.getNumeracion());
+					         acreditacion.setMonto(Double.valueOf(rechazo.getMonto()));
+					         mensajeDao.create(acreditacion);
+				         }
 				
 				
 				break;
-			case SPR:  //  registar la programcion de portabilidad...  em el receptor
-				        
+			case SPR:  //  registar la programcion de portabilidad...  em el receptor		
+				TipoSolicitudProcedente solicitud = cuerpo.getSolicitudProcedente();
+				ProgramacionPortabilidad programacion=new ProgramacionPortabilidad();
+				
+				
+				programacion.setFechaLimiteEnvio(fechaUtil.parseStringToLocalDateTime(solicitud.getFechaLimiteProgramacionPortabilidad(), "yyyyMMddHHmmss"));
+				programacion.setFechaLimiteEjecucion(fechaUtil.parseStringToLocalDateTime(solicitud.getFechaLimiteEjecucionPortabilidad(), "yyyyMMddHHmmss"));
+				 mensajeDao.create(programacion);
+				
+				
 				break;
+				
+				
 				
 				
 			case CPSPR: //  registar la programcion de portabilidad... en el receptor
+				TipoSolicitudProcedente solicitud1 = cuerpo.getSolicitudProcedenteConsultaPreviaProcedente();
+				
+				ProgramacionPortabilidad programacion1=new ProgramacionPortabilidad();				
+				programacion1.setFechaLimiteEnvio(fechaUtil.parseStringToLocalDateTime(solicitud1.getFechaLimiteProgramacionPortabilidad(), "yyyyMMddHHmmss"));
+				programacion1.setFechaLimiteEjecucion(fechaUtil.parseStringToLocalDateTime(solicitud1.getFechaLimiteEjecucionPortabilidad(), "yyyyMMddHHmmss"));
+
+				 mensajeDao.create(programacion1);
 				        
 				break;
 				
