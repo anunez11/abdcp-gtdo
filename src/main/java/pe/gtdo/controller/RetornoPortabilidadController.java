@@ -13,6 +13,7 @@ import pe.gtdo.tipo.TipoCuerpoMensaje;
 import pe.gtdo.tipo.TipoSolicitudRetorno;
 import pe.gtdo.util.constante.ConsultaPrevia;
 import pe.gtdo.util.constante.Retorno;
+import pe.gtdo.util.constante.ServicioExterno;
 
 @ApplicationScoped
 public class RetornoPortabilidadController {
@@ -30,6 +31,9 @@ public class RetornoPortabilidadController {
 	MensajeController mensajeController;
 	
 	
+	@Inject
+	ServicioExterno servicioExterno;
+	
 	public void ejecutarProceso(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		
 		
@@ -42,7 +46,7 @@ public class RetornoPortabilidadController {
 				
 					  TipoSolicitudRetorno solicitud = cuerpo.getSolicitudRetorno();
 					  
-					  if("00".equals(cabecera.getRemitente())) return ;
+					  if(servicioExterno.getAbdcp().equals(cabecera.getRemitente())) return ;
 					  
 				      BlacklistAbdcp rechazo = mensajeRechazoDao.getListanegra(null, Retorno.SR.getValue(), solicitud.getNumeracionARetornar());
 				      // aca  hay dos posibilidades

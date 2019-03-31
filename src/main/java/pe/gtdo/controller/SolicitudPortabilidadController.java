@@ -32,10 +32,15 @@ import pe.gtdo.util.FechaUtil;
 import pe.gtdo.util.Utilitario;
 import pe.gtdo.util.constante.ConsultaPrevia;
 import pe.gtdo.util.constante.Proceso;
+import pe.gtdo.util.constante.ServicioExterno;
 import pe.gtdo.util.constante.SolicitudPortabilidad;
 
 @ApplicationScoped
 public class SolicitudPortabilidadController {
+	
+	
+	@Inject
+	ServicioExterno servicioExterno;
 	
 	@Inject
 	ClienteDao clienteDao;
@@ -95,7 +100,7 @@ public class SolicitudPortabilidadController {
 			    	    	  }else{
 			    	    		 // se envia un mensaje ANS
 			    	    		  // pregunamos si el  numero tine rechazo despues de enviar un mensaje ANCP
-			    	    		  String idSolicitud=mensajeDao.generarCodigo("00", Proceso.SP.getValue());
+			    	    		  String idSolicitud=mensajeDao.generarCodigo(servicioExterno.getAbdcp(), Proceso.SP.getValue());
 			    	    		  mensajeController.enviarANS(mensaje,receptor,
 			    	    				  idSolicitud
 			    	    				  , rango.getInicioRango());
@@ -172,7 +177,7 @@ public class SolicitudPortabilidadController {
 			case OCC:
 				          TipoObjecionConcesionarioCedente msgOCC = cuerpo.getConsultaPreviaObjecionConcesionarioCedente();
 	                      mensajeController.enviarRABDCP//(idSolicitud, destinatario, numeracion, causaRechazo, monto, moneda, fechaActivacion, fechaTerminoContratoEquipo, fechaVencimiento);
-	                      ( cabecera.getIdentificadorProceso(), "46",
+	                      ( cabecera.getIdentificadorProceso(), servicioExterno.getOperador(),
 	                    		  msgOCC.getNumeracion(), msgOCC.getCausaObjecion(),
 	                    		  msgOCC.getMonto(), msgOCC.getMoneda(), msgOCC.getFechaActivacion(), 
 	                    		  msgOCC.getFechaTerminoContratoEquipo(), msgOCC.getFechaVencimiento());
@@ -259,7 +264,7 @@ public class SolicitudPortabilidadController {
 				
 				
 			case PP: //  aca hay dos posibilidades que se envie un mesaje FLEP o que se envie un mensaje  PEP 
-				        if(cabecera.getDestinatario().equals("00")){
+				        if(cabecera.getDestinatario().equals(servicioExterno.getAbdcp())){
 				           
 				        	 MensajeAbdcp ppSPMsg = mensajeDao.getMensajeAbdcp(cabecera.getIdentificadorProceso(), SolicitudPortabilidad.SP.getValue());
 				        	   MensajeABDCP mesageSPAbdcp = utilitario.converXmlToObject(MensajeABDCP.class, utilitario.converDocumentToString(ppSPMsg.getRequest()));

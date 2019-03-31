@@ -480,7 +480,7 @@ public class MensajeController {
 		builder.setCabeceraIdentificadorMensaje(mensajeDao.generarCodigo(cedente, Proceso.SP.getValue()));	    
 	    builder.setCabeceraIdentificadorProceso(idSolicitud);
 	    builder.setCabeceraRemitente(cedente);
-	    builder.setCabeceraDestinatario("00");	    
+	    builder.setCabeceraDestinatario(servicioExteno.getAbdcp());	    
 	    builder.setCabeceraFechaCreacionMensaje(fecha);	
 	    
 	    TipoSolicitudAceptadaCedente  solicitudAceptadaCedente=new TipoSolicitudAceptadaCedente();
