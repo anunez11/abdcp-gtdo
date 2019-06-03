@@ -128,29 +128,10 @@ public class SolicitudPortabilidadController {
 			    	    			      }else{
 			    	    			    	  mensajeController.enviarECPC(mensaje, idSolicitud, cedente, numero,tipoPortabilidad);
 					    	    			  
-			    	    			      }
-			    	    			      
-			    	    			      
-			    	    			      
-			    	    			      
-			    	    			      
-			    	    			     
-			    	    			  
-			    	    			  
+			    	    			      }			    	    			  
 			    	    		  } 
-			    	    			
-			    	    		 
-			    	    	  }
-			    	    	  
-		    	    	  
-		    	    	  
-		    	    	  
-	    	        	  
-	    	        	  
-	    	        	  
-	    	    	  
-	    	          }
-				
+			    	    	  }	    	    	  
+	    	          }				
 				
 				break;
 			case ANS:
@@ -228,6 +209,8 @@ public class SolicitudPortabilidadController {
 					         acreditacion.setMoneda(rechazo.getMoneda());
 					         acreditacion.setNumero( rechazo.getNumeracion());
 					         acreditacion.setMonto(Double.valueOf(rechazo.getMonto()));
+					         acreditacion.setFechaLimiteEnvio(horarioController.getFechaLimiteEnvioAcredtacion());
+					         //acreditacion.setFechaLimiteEnvio();
 					         mensajeDao.create(acreditacion);
 				         }
 				
@@ -236,11 +219,13 @@ public class SolicitudPortabilidadController {
 			case SPR:  //  registar la programcion de portabilidad...  em el receptor		
 				TipoSolicitudProcedente solicitud = cuerpo.getSolicitudProcedente();
 				ProgramacionPortabilidad programacion=new ProgramacionPortabilidad();
-				
-				
+								
 				programacion.setFechaLimiteEnvio(fechaUtil.parseStringToLocalDateTime(solicitud.getFechaLimiteProgramacionPortabilidad(), "yyyyMMddHHmmss"));
 				programacion.setFechaLimiteEjecucion(fechaUtil.parseStringToLocalDateTime(solicitud.getFechaLimiteEjecucionPortabilidad(), "yyyyMMddHHmmss"));
-				 mensajeDao.create(programacion);
+				//programacion.setNumero();
+				programacion.setNumero(mensajeDao.getNumeroMensaje(SolicitudPortabilidad.SPR, cuerpo, cabecera.getIdentificadorProceso()));
+				programacion.setIdProceso(cabecera.getIdentificadorProceso());
+				mensajeDao.create(programacion);
 				
 				
 				break;
@@ -254,8 +239,9 @@ public class SolicitudPortabilidadController {
 				ProgramacionPortabilidad programacion1=new ProgramacionPortabilidad();				
 				programacion1.setFechaLimiteEnvio(fechaUtil.parseStringToLocalDateTime(solicitud1.getFechaLimiteProgramacionPortabilidad(), "yyyyMMddHHmmss"));
 				programacion1.setFechaLimiteEjecucion(fechaUtil.parseStringToLocalDateTime(solicitud1.getFechaLimiteEjecucionPortabilidad(), "yyyyMMddHHmmss"));
-
-				 mensajeDao.create(programacion1);
+				programacion1.setIdProceso(cabecera.getIdentificadorProceso());
+				programacion1.setNumero(mensajeDao.getNumeroMensaje(SolicitudPortabilidad.SPR, cuerpo, cabecera.getIdentificadorProceso()));
+				mensajeDao.create(programacion1);
 				        
 				break;
 				
@@ -370,7 +356,7 @@ private void envioCedente(TipoCabeceraMensaje cabecera,TipoCuerpoMensaje cuerpo,
 			
 		}
 		
-		if(cliente.getMontoDeuda()>0D) {
+		if(cliente.getEstadoFactura().trim().equals("Pendiente de Cobro")) {
 			mensajeController.enviarOCC(cabecera.getDestinatario()
 					, cabecera.getIdentificadorProceso()
 					, "REC01PRT09"

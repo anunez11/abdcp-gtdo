@@ -53,8 +53,8 @@ public class test {
 		
 		
 		
-		//ReceiveMessageResponse respuesta = soap.enviarMensaje(getArchivo(), "dXNlcjQ2VGVzdGluZw==", "user46", getXmlStringAPD() );
-	ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "dXNlcjQ2VGVzdGluZw==", "user46", getXmlStringRetornoSR() );
+		ReceiveMessageResponse respuesta = soap.enviarMensaje(getArchivo(), "dXNlcjQ2VGVzdGluZw==", "user46", getXmlStringAPD() );
+	//ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "dXNlcjQ2VGVzdGluZw==", "user46", getXmlStringCP() );
 		
 		System.out.println("========================================================>");
 		System.out.println(respuesta.getResponse());
@@ -168,21 +168,22 @@ public class test {
 		
 		// 46190313010000014  caso ●	FU -P01- 064 ●	FU -P01- 065
 		TipoAcreditacionPagoDeuda deuda= new TipoAcreditacionPagoDeuda();
-		deuda.setDocumentoAdjunto("462019032200003-P.pdf");
-		                           
+		deuda.setDocumentoAdjunto("462019060200009-P.jpg");
 		deuda.setEntidadPago("scotiabank");
-		deuda.setFechaPago("20190310101030");
+		
+		//deuda.setFechaPago("20190115153010");
+		deuda.setFechaPago("20190602110800");
 		deuda.setMoneda("01");
 		deuda.setMonto("100");
-		deuda.setNumeracion("17436927");
+		deuda.setNumeracion("17436925");
 		deuda.setNumeroOperacionPago("123456789101");
 		
 		Builder builder= new Builder();
 		builder.setCodigoMsg("APD");
 		builder.setCabeceraDestinatario("00");
-		builder.setCabeceraFechaCreacionMensaje("20190313200918");
-		builder.setCabeceraIdentificadorMensaje("46201903220000018");
-		builder.setCabeceraIdentificadorProceso("46190322010000064");
+		builder.setCabeceraFechaCreacionMensaje("20190602111320");
+		builder.setCabeceraIdentificadorMensaje("46201906020000009");
+		builder.setCabeceraIdentificadorProceso("46190602010000016");
 		builder.setCabeceraRemitente("46");
 		builder.setAcreditacionPagoDeuda(deuda);
        
@@ -361,7 +362,7 @@ public class test {
 		TipoSolicitudPortabilidad consultaPrevia=new TipoSolicitudPortabilidad();		
 		List<TipoRangoNumeracion> numeracionSolicitada=new ArrayList<TipoRangoNumeracion>();
 	
-		List<String> numero= Arrays.asList("17436925");
+		List<String> numero= Arrays.asList("17436400","17436401","17436402");
 		for(int i=0;i<numero.size();i++){
 			TipoRangoNumeracion rango=new TipoRangoNumeracion();
 		//	numero=numero+i;
@@ -378,16 +379,16 @@ public class test {
 		lista.setRangoNumeracion(numeracionSolicitada);
 		
 		consultaPrevia.setCantidadNumeraciones(String.valueOf(numeracionSolicitada.size()));
-		consultaPrevia.setCliente("1");
+		consultaPrevia.setCliente("2");
 		consultaPrevia.setCodigoCedente("19");
 		consultaPrevia.setCodigoReceptor("46");
 		//consultaPrevia.setDepartamentoSolicitud("1");
-		consultaPrevia.setEmailContacto("angelanb11@gmail.com");
+	//	consultaPrevia.setEmailContacto("angelanb11@gmail.com");
 		//consultaPrevia.setFaxContacto("abv123456789");
-		consultaPrevia.setNombreContacto("ANGEL NUÑEZ  BERROSPI");
+	//	consultaPrevia.setNombreContacto("ANGEL NUÑEZ  BERROSPI");
 		//consultaPrevia.setNumeroConsultaPrevia("46190312050000005");
 		consultaPrevia.setNumeroDocumentoIdentidad("42371327");
-		consultaPrevia.setObservaciones("PRUEBA 1");
+		consultaPrevia.setObservaciones("");
 		consultaPrevia.setTelefonoContacto("954183017");
 		consultaPrevia.setTipoDocumentoIdentidad("01");
 		consultaPrevia.setTipoServicio("2");
@@ -396,9 +397,9 @@ public class test {
 		Builder builder= new Builder();
 		builder.setCodigoMsg("CP");
 		builder.setCabeceraDestinatario("00");
-		builder.setCabeceraFechaCreacionMensaje("20190322184100");
-		builder.setCabeceraIdentificadorMensaje("46201903220000006");
-		builder.setCabeceraIdentificadorProceso("46190322050000006");
+		builder.setCabeceraFechaCreacionMensaje("20190505174100");
+		builder.setCabeceraIdentificadorMensaje("46201905050000007");
+		builder.setCabeceraIdentificadorProceso("46190505050000007");
 		builder.setCabeceraRemitente("46");
 		builder.setConsultaPrevia(consultaPrevia);
 		
@@ -411,7 +412,7 @@ public class test {
 	   
 	
 	   
-	   File file = new File("C:\\Users\\Angel A\\Documents\\ANGEL\\DOC\\pdf.pdf");
+	   File file = new File("C:\\Users\\Angel A\\Downloads\\factura01.jpg");
 	   //init array with file length
 	   byte[] bytesArray = new byte[(int) file.length()]; 
 

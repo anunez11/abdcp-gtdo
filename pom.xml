@@ -46,7 +46,7 @@
 				<stage.project>Production</stage.project>
 			</properties>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
@@ -78,7 +78,7 @@
 				<stage.project>SystemTest</stage.project>
 			</properties>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
@@ -182,7 +182,7 @@
 
 	</dependencies>
 	<build>
-		<finalName>abdcp-sop-sever-prod-${stage.project}</finalName>
+		<finalName>abdcp-soap-sever-${stage.project}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -222,51 +222,4 @@
 			</resource>
 		</resources>
 	</build>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </project>

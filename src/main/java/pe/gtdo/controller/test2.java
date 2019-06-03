@@ -38,15 +38,14 @@ public class test2 {
 		System.out.println(data.substring(8, 10));
 		System.out.println("========================================================>");
 		ClienteSoap soap= new ClienteSoap();		
-		soap.setConfig("http://10.117.1.46/XCEWS/services/abdcp?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://10.117.1.46/XCEWS/services/abdcp");
+		//soap.setConfig("http://10.117.1.46/XCEWS/services/abdcp?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://10.117.1.46/XCEWS/services/abdcp");
 
 
-	//	soap.setConfig("http://localhost:8080/Wigo/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Wigo/services/ABDCPWebService");
+		soap.setConfig("http://localhost:8080/Wigo/services/ABDCPWebService?wsdl", "http://ws.inpac.telcordia.com","ABDCPWebService", "http://localhost:8080/Wigo/services/ABDCPWebService");
+			
 		
 		
-		
-		
-		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "dXNlcjQ2VGVzdGluZw==", "user46", getXmlStringCP() );
+		ReceiveMessageResponse respuesta = soap.enviarMensaje(null, "dXNlcjQ2VGVzdGluZw==", "user46", getXmlStringAPD()	 );
 		
 		System.out.println("========================================================>");
 		System.out.println(respuesta.getResponse());
@@ -142,20 +141,22 @@ public class test2 {
 		
 		
 		TipoAcreditacionPagoDeuda deuda= new TipoAcreditacionPagoDeuda();
-		deuda.setDocumentoAdjunto("462019011900001.pdf");
+		deuda.setDocumentoAdjunto("46201906020000009.jpg");
 		deuda.setEntidadPago("scotiabank");
-		deuda.setFechaPago("20190115153010");
+		
+		//deuda.setFechaPago("20190115153010");
+		deuda.setFechaPago("20190602110800");
 		deuda.setMoneda("01");
-		deuda.setMonto("40");
-		deuda.setNumeracion("954180317");
+		deuda.setMonto("100");
+		deuda.setNumeracion("17436925");
 		deuda.setNumeroOperacionPago("123456789101");
 		
 		Builder builder= new Builder();
 		builder.setCodigoMsg("APD");
 		builder.setCabeceraDestinatario("00");
-		builder.setCabeceraFechaCreacionMensaje("20190216133237");
-		builder.setCabeceraIdentificadorMensaje("46201902180000006");
-		builder.setCabeceraIdentificadorProceso("46190216010000006");
+		builder.setCabeceraFechaCreacionMensaje("20190602111320");
+		builder.setCabeceraIdentificadorMensaje("46201906020000009");
+		builder.setCabeceraIdentificadorProceso("46190602010000016");
 		builder.setCabeceraRemitente("46");
 		builder.setAcreditacionPagoDeuda(deuda);
        

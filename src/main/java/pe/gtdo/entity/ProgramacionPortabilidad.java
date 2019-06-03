@@ -23,13 +23,13 @@ public class ProgramacionPortabilidad implements Serializable {
 	private Long idProgramacionPortabilidad;
 
 	@Column(name="es_activo")
-	private Boolean esActivo;
+	private Boolean esActivo=true;
 
 	@Column(name="es_ejecutado")
 	private Boolean esEjecutado;
 
 	@Column(name="es_enviado")
-	private Boolean esEnviado;
+	private Boolean esEnviado=false;
 
 	@Column(name="fecha_limite_envio")
 	private LocalDateTime fechaLimiteEnvio;
@@ -44,10 +44,10 @@ public class ProgramacionPortabilidad implements Serializable {
 	private LocalDateTime fechaLimiteEjecucion;
 
 	@Column(name="fecha_modificacion")
-	private LocalDateTime fechaModificacion;
+	private LocalDateTime fechaModificacion=LocalDateTime.now();
 	
 	@Column(name="fecha_creacion")
-	private LocalDateTime fechaCreacion;
+	private LocalDateTime fechaCreacion=LocalDateTime.now();
 
 	@Column(name="fecha_progamada_ejecucion")
 	private LocalDateTime fechaProgamadaEjecucion;

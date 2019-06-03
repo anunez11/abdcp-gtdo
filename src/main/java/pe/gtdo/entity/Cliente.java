@@ -33,6 +33,10 @@ public class Cliente implements Serializable {
 	@Column(name="codigo_error")
 	private String codigoEerror;
 	
+	@Column(name="estado_factura")
+	private String estadoFactura;
+	
+	
 	private String numero;
 	private String concesionario;
 
@@ -196,6 +200,14 @@ public class Cliente implements Serializable {
 
 	public void setFechaActivacion(LocalDate fechaActivacion) {
 		this.fechaActivacion = fechaActivacion;
+	}
+
+	public String getEstadoFactura() {
+		return estadoFactura;
+	}
+
+	public void setEstadoFactura(String estadoFactura) {
+		this.estadoFactura = estadoFactura;
 	}
 
 	

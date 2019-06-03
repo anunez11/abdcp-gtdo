@@ -22,22 +22,22 @@ public class AcreditacionPago implements Serializable {
 
 	private String adjunto;
 
-	private Long archivo;
+	
 
 	@Column(name="entidad_pago")
 	private String entidadPago;
 
 	@Column(name="es_activo")
-	private Boolean esActivo;
+	private Boolean esActivo=true;
 
 	@Column(name="es_enviado")
-	private Boolean esEnviado;
+	private Boolean esEnviado=false;
 
 	@Column(name="fecha_creacion")
-	private LocalDateTime fechaCreacion;
+	private LocalDateTime fechaCreacion=LocalDateTime.now();
 	
 	@Column(name="fecha_modificacion")
-	private LocalDateTime fechaModificacion;
+	private LocalDateTime fechaModificacion=LocalDateTime.now();
 
 	
 	@Column(name="fecha_limite_envio")
@@ -88,13 +88,7 @@ public class AcreditacionPago implements Serializable {
 		this.adjunto = adjunto;
 	}
 
-	public Long getArchivo() {
-		return this.archivo;
-	}
 
-	public void setArchivo(Long archivo) {
-		this.archivo = archivo;
-	}
 
 	public String getEntidadPago() {
 		return this.entidadPago;

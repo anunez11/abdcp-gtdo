@@ -3,6 +3,7 @@ package pe.gtdo.dao;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +43,13 @@ import pe.gtdo.util.constante.SolicitudPortabilidad;
 
 @ApplicationScoped
 public class MensajeDao extends TransactionDao {
-   
+       
+	   @Inject
+	   SolicitudDao solicitudDao;
 	
 	   @Inject
-	   HorarioController horario;
+	  HorarioController horario;
+	   
 	   @Inject
 		FechaUtil fechaUtil;
     	public String generarCodigo(String concesionario,String tipoProceso){
@@ -65,8 +69,83 @@ public class MensajeDao extends TransactionDao {
 		return lista.get(0);
 	}
 	
+    	public void guardarResponse(String response,MensajeAbdcp msgDb) throws Exception{
+    		
+    		
+    		MensajeAbdcp mensajeDB = crudService.find(MensajeAbdcp.class, msgDb.getId());
+    		
+    		
+    		DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    		String msgResponse="<?xml version=\"1.0\" encoding=\"UTF-8\" ?><response>"+response+"</response>";
+    		Document document = db.parse(new ByteArrayInputStream(msgResponse.getBytes("UTF-8")));		   
+    		
+    		mensajeDB.setResponse(document);
+    		mensajeDB.setFechaRespuesta(LocalDateTime.now());   		
+    		
+    		mensajeDB=update(mensajeDB);
+    		solicitudDao.setIdProcesoNumeroSolicitud(mensajeDB, response);
+    		
+    		
+    	}
+    	
+    	
+    public String getNumeroMensaje(ConsultaPrevia tipo,TipoCuerpoMensaje cuerpo,String idSolicitud){
+        String numero="";  
+    	MensajeAbdcp msgAbdcp;
+		switch(tipo){
+    	     
+    	     case ECPC : numero=cuerpo.getConsultaPreviaEnvioCedente().getNumeracion();
+    	     break;	
+    	     case CPOCC : numero=cuerpo.getConsultaPreviaObjecionConcesionarioCedente().getNumeracion();
+    	     break;	
+    	     case CPRABD :numero=cuerpo.getConsultaPreviaRechazadaABDCP().getNumeracion();
+    	     break;	
+    	     
+    	     default :  msgAbdcp = getMensajeAbdcpNotNullNumero(idSolicitud,Arrays.asList(ConsultaPrevia.ANCP.getValue(),
+    	    		 ConsultaPrevia.ECPC.getValue(),
+    	    		 ConsultaPrevia.CPOCC.getValue(),
+    	    		 ConsultaPrevia.CPRABD.getValue()
+    	    		 ));
+			            if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+    	} 
+    	
+    	return numero;
+    }	
 	
-	public void guardarMensaje(MensajeABDCP mensaje,String msg,String direccion) throws Exception{
+    public String getNumeroMensaje(SolicitudPortabilidad tipo,TipoCuerpoMensaje cuerpo,String idSolicitud){
+        String numero="";  
+    	MensajeAbdcp msgAbdcp;
+		switch(tipo){
+    	     
+    	     case ESC : numero=cuerpo.getEnvioSolicitudCedente().getNumeracion();
+    	     break;	
+    	     case OCC : numero=cuerpo.getObjecionConcesionarioCedente().getNumeracion();
+    	     break;	    	    
+    	     
+    	     default :  msgAbdcp = getMensajeAbdcpNotNullNumero(idSolicitud,Arrays.asList(SolicitudPortabilidad.ESC.getValue(),
+    	    		 SolicitudPortabilidad.OCC.getValue(),SolicitudPortabilidad.ANS.getValue()
+    	    		 ));
+			            if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+    	} 
+    	
+    	return numero;
+    }	
+    public String getNumeroMensaje(Retorno tipo,TipoCuerpoMensaje cuerpo,String idSolicitud){
+        String numero="";  
+    	MensajeAbdcp msgAbdcp;
+		switch(tipo){
+    	     
+    	     case SR : numero=cuerpo.getSolicitudRetorno().getNumeracionARetornar();
+    	     break;	
+    	    
+    	     
+    	     default :  msgAbdcp = getMensajeAbdcpNotNullNumero(idSolicitud,Arrays.asList(Retorno.SR.getValue() ));
+			            if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+    	} 
+    	
+    	return numero;
+    }	
+	public MensajeAbdcp guardarMensaje(MensajeABDCP mensaje,String msg,String direccion) throws Exception{
 		
 		   TipoCabeceraMensaje cabecera = mensaje.getCabeceraMensaje();
 		   TipoCuerpoMensaje cuerpo = mensaje.getCuerpoMensaje();
@@ -78,22 +157,27 @@ public class MensajeDao extends TransactionDao {
 		   
 		   			case CP:if(ConsultaPrevia.ANCP.getValue().equals(cuerpo.getIdMensaje())){
 						 			   idSolicitud= cuerpo.getAsignacionNumeroConsultaPrevia().getIdentificacionSolicitud();
+						 			   
 									   numero=cuerpo.getAsignacionNumeroConsultaPrevia().getNumeracion();					   
 							}else{
-									   msgAbdcp = getMensajeAbdcp(idSolicitud,ConsultaPrevia.ANCP.getValue());
-									   if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+								     
+								       numero= getNumeroMensaje(ConsultaPrevia.fromType(cuerpo.getIdMensaje()), cuerpo,idSolicitud);								
+									 
 							}
 		   			break;
-		   			case RP:   msgAbdcp = getMensajeAbdcp(idSolicitud,Retorno.SR.getValue());
-		   			          if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+		   			case RP:     numero= getNumeroMensaje(Retorno.fromType(cuerpo.getIdMensaje()), cuerpo,idSolicitud);    
+		   				 
+		   				       //msgAbdcp = getMensajeAbdcp(idSolicitud,Retorno.SR.getValue());		   			
+		   			          // /if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+		   			          
+		   			          
 		   			break;	   			
 		   			
-		   			case SP : if(SolicitudPortabilidad.ANS.getValue().equals(cuerpo.getIdMensaje())){
+		   			case SPP : if(SolicitudPortabilidad.ANS.getValue().equals(cuerpo.getIdMensaje())){
 			 			   			idSolicitud= cuerpo.getAsignacionNumeroSolicitud().getIdentificacionSolicitud();
 			 			   			numero=cuerpo.getAsignacionNumeroSolicitud().getNumeracion();					   
 				               }else{
-					                msgAbdcp = getMensajeAbdcp(idSolicitud,SolicitudPortabilidad.ANS.getValue());
-						            if(msgAbdcp!=null) numero=msgAbdcp.getNumero();
+				            	   numero= getNumeroMensaje(SolicitudPortabilidad.fromType(cuerpo.getIdMensaje()), cuerpo,idSolicitud);
 				                }     
 		   			break;	
 		   
@@ -108,10 +192,11 @@ public class MensajeDao extends TransactionDao {
 		   data.setIdProceso(cabecera.getIdentificadorProceso());
 		   data.setIdSolicitud(idSolicitud);
 		   data.setProceso(proceso);
-		   data.setNumero(numero);		   DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		   data.setNumero(numero);		  
+		   DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		   Document document = db.parse(new ByteArrayInputStream(msg.getBytes("UTF-8")));		   
 		   data.setRequest(document);
-		   create(data);
+		   return create(data);
 		
 		
 	}
@@ -121,11 +206,19 @@ public class MensajeDao extends TransactionDao {
 		Map<String,Object> parameters=new HashMap<String,Object>();
 		parameters.put("idSolicitud",idSolicitud);
 		parameters.put("codigoMensaje",tipo);		
-		List<MensajeAbdcp> lista = crudService.findWithQuery("select u from MensajeAbdcp u  where u.idSolicitud=:idSolicitud and u.codigoMensaje=:codigoMensaje ", parameters);
+		List<MensajeAbdcp> lista = crudService.findWithQuery("select u from MensajeAbdcp u  where u.idSolicitud=:idSolicitud and u.codigoMensaje=:codigoMensaje  ", parameters);
 		if(lista.size()>0) return lista.get(0);
 		return null;
 	}
-	
+
+	public MensajeAbdcp getMensajeAbdcpNotNullNumero(String idSolicitud,List<String> tipo){
+		Map<String,Object> parameters=new HashMap<String,Object>();
+		parameters.put("idSolicitud",idSolicitud);
+		parameters.put("codigoMensaje",tipo);		
+		List<MensajeAbdcp> lista = crudService.findWithQuery("select u from MensajeAbdcp u  where u.idSolicitud=:idSolicitud and u.codigoMensaje in(:codigoMensaje) and u.numero is not null  ", parameters);
+		if(lista.size()>0) return lista.get(0);
+		return null;
+	}
 	
 	public MensajeAbdcp getMensajeAbdcp(String idSolicitud,List<String> tipo){
 		Map<String,Object> parameters=new HashMap<String,Object>();

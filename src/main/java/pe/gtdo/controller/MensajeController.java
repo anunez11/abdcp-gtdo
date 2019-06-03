@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import pe.gtdo.cliente.ClienteSoap;
 import pe.gtdo.dao.MensajeDao;
-
+import pe.gtdo.entity.MensajeAbdcp;
 import pe.gtdo.msg.Builder;
 import pe.gtdo.soap.ReceiveMessageResponse;
 import pe.gtdo.tipo.MensajeABDCP;
@@ -754,7 +754,7 @@ public class MensajeController {
 	private void enviar(byte[] archivo,MensajeABDCP mensaje) throws Exception{
 		String msg=utilitario.converObjectToXmlString(mensaje);
 		ClienteSoap soap= new ClienteSoap();
-		mensajeDao.guardarMensaje(mensaje,msg, "OUT");
+		MensajeAbdcp msgDb = mensajeDao.guardarMensaje(mensaje,msg, "OUT");
 		
 		soap.setConfig(servicioExteno.getWsdlAbdcp(), 
 				servicioExteno.getTargetNameAbdcp(),
@@ -763,6 +763,7 @@ public class MensajeController {
 		ReceiveMessageResponse respuesta = soap.enviarMensaje(archivo,servicioExteno.getClave(),servicioExteno.getUsuario(), msg);
 
 		
+		mensajeDao.guardarResponse(respuesta.getResponse(),msgDb);
 		System.out.println("==================================================================");
 		System.out.println("===> RESPONSE "+respuesta.getResponse());
 		System.out.println("==================================================================");

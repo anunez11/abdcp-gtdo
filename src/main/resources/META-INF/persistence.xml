@@ -19,7 +19,8 @@
 		<class>pe.gtdo.entity.TipoMoneda</class>
 		<class>pe.gtdo.entity.TipoProceso</class>
 		<class>pe.gtdo.entity.TipoServicio</class>
-
+	    <class>pe.gtdo.entity.Solicitud</class>
+		<class>pe.gtdo.entity.NumeroSolicitud</class>
 		<properties>
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />

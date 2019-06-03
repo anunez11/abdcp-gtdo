@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 import pe.gtdo.core.logging.AbdcpLogger;
 import pe.gtdo.dao.MensajeDao;
 import pe.gtdo.dao.MensajeErrorDao;
+import pe.gtdo.entity.MensajeAbdcp;
 import pe.gtdo.tipo.MensajeABDCP;
 import pe.gtdo.util.Utilitario;
 
@@ -66,21 +67,28 @@ public class ABDCPController {
 			    MensajeABDCP mensaje = utilitario.converXmlToObject(MensajeABDCP.class, xmlMsg);
 			    
 			    
-			    mensajeDao.guardarMensaje(mensaje,xmlMsg ,"IN");			    
-			    if(!utilitario.validarMsg(xmlMsg)) return msgError.getError("ERRSOAP012");		
+			   MensajeAbdcp mensajeDB = mensajeDao.guardarMensaje(mensaje,xmlMsg ,"IN");
+			   
+			    if(!utilitario.validarMsg(xmlMsg)){
+			    	mensajeDao.guardarResponse("ERRSOAP012", mensajeDB);
+			    	return msgError.getError("ERRSOAP012");	
+			    }
+			    	
+			    
 				consultaPreviaController.ejecutarProceso(attachedDoc,mensaje);
 				notificacionErrorController.ejecutarProceso(attachedDoc,mensaje);
 				retornoPortabilidadController.ejecutarProceso(attachedDoc,mensaje);
 				solicitudPortabilidadController.ejecutarProceso(attachedDoc,mensaje);
-			
+				mensajeDao.guardarResponse("ACK", mensajeDB);
+				
 			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return "ack";
+	
+		return "ACK";
 		
 	}
 	

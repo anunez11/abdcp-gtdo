@@ -177,13 +177,13 @@ public class ConsultaPreviaController {
 					, null
 					, null
 					, null
-					, cuerpo.getEnvioSolicitudCedente().getNumeracion());
+					, cuerpo.getConsultaPreviaEnvioCedente().getNumeracion());
 			
 			return ;
 			
 		}
 		
-		if(cliente.getMontoDeuda()>0D) {
+		if(cliente.getEstadoFactura().trim().equals("Pendiente de Cobro"))  {
 			mensajeController.enviarCPOCC(cabecera.getDestinatario(), "00", cabecera.getIdentificadorProceso()
 					, "REC01PRT09"
 					, fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd")
