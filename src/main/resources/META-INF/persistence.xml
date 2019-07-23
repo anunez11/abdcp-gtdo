@@ -3,7 +3,7 @@
 	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="CHANGEME">
-		<jta-data-source>java:/abdcp_ds</jta-data-source>
+		<jta-data-source>java:/abdcop_prod_ds</jta-data-source>
 	   
 	    <class>pe.gtdo.entity.Departamento</class>
 		<class>pe.gtdo.entity.EstadoNumeracion</class>
