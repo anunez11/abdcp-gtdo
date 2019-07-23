@@ -183,7 +183,7 @@ public class ConsultaPreviaController {
 			
 		}
 		
-		if(cliente.getEstadoFactura().trim().equals("Pendiente de Cobro"))  {
+		if(cliente.getEstadoFactura().trim().equals("01"))  {
 			mensajeController.enviarCPOCC(cabecera.getDestinatario(), "00", cabecera.getIdentificadorProceso()
 					, "REC01PRT09"
 					, fechaUtil.parseDateToString(cliente.getFechaActivacion(), "yyyyMMdd")

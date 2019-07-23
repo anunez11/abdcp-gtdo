@@ -356,7 +356,7 @@ private void envioCedente(TipoCabeceraMensaje cabecera,TipoCuerpoMensaje cuerpo,
 			
 		}
 		
-		if(cliente.getEstadoFactura().trim().equals("Pendiente de Cobro")) {
+		if(cliente.getEstadoFactura().trim().equals("01")) {
 			mensajeController.enviarOCC(cabecera.getDestinatario()
 					, cabecera.getIdentificadorProceso()
 					, "REC01PRT09"
